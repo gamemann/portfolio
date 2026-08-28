@@ -71,7 +71,7 @@ export const projects: Project[] = [
     {
         title: "Best Mods",
         banner: "/images/project/bestmods.png",
-        link: "https://bestmods.io",
+        link: "https://bestmods.org",
         sourceLink: "https://github.com/bestmods",
         openSource: true,
         maintained: false,
@@ -84,7 +84,7 @@ export const projects: Project[] = [
     {
         title: "Browser.TF",
         banner: "/images/project/browsertf.png",
-        link: "https://btf.bestservers.io",
+        link: "https://btf.cdeacon.net",
         sourceLink: "https://github.com/gamemann/Browser.TF",
         openSource: true,
         maintained: false,
@@ -92,6 +92,6 @@ export const projects: Project[] = [
         role: "Creator",
         tags: ["Server browser", "TF2", "PHP"],
         summary:
-            "A web-based server browser for Team Fortress 2 that I built in high school around 2015. The original browser.tf domain was fairly active before it was lost in mid-2022; it now lives on at btf.bestservers.io."
+            "A web-based server browser for Team Fortress 2 that I built in high school around 2015. The original browser.tf domain was fairly active before it was lost in mid-2022; it now lives on at btf.cdeacon.net."
     }
 ]
