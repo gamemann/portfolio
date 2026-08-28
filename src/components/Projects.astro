@@ -1,71 +1,27 @@
 ---
-import Item from "../components/project/Item.astro"
+import Section from "./ui/Section.astro"
+import Card from "./project/Card.astro"
+import { projects } from "../data/projects"
+
+const featured = projects.filter((p) => p.featured)
+const rest = projects.filter((p) => !p.featured)
 ---
 
-<section id="projects">
-    <div class="mx-auto container">
-        <h2 class="text-white text-3xl font-extrabold mb-4">My Primary Projects</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            <Item
-                banner="/images/project/tekworks.png"
-                title="TekWorks"
-                link="https://tekworks.net"
-                openSource={true}
-                sourceLink="https://github.com/tek-works"
-                category="Technology"
-            >
-                A future software developer and publisher.
-            </Item>
-            <Item
-                banner="/images/project/tmc.png"
-                title="The Modding Community"
-                link="https://moddingcommunity.com"
-                openSource={true}
-                sourceLink="https://github.com/modcommunity"
-                category="Gaming"   
-            >
-                A welcoming and inclusive modding and game development community. We currently offer a blog and forum, with plans to launch a mod workshop, server browser, and more in the future!
-            </Item>
-            <Item
-                banner="/images/project/xdp-firewall.png"
-                title="XDP Firewall"
-                link="https://github.com/gamemann/XDP-Firewall"
-                openSource={true}
-                sourceLink="https://github.com/gamemann/XDP-Firewall"
-                category="Security"
-            >
-                A stateless firewall that utilizes the Linux kernel's XDP hook. The XDP hook allows for very fast network processing on Linux systems. This is great for dropping malicious traffic from a (D)DoS attack.
-            </Item>
-            <Item
-                banner="/images/project/packet-batch.png"
-                title="Packet Batch"
-                link="https://github.com/Packet-Batch"
-                openSource={true}
-                sourceLink="https://github.com/Packet-Batch"
-                category="Security"
-            >
-                A collection of high-performance applications and tools designed for generating and sending network packets. It serves two main purposes: penetration testing, which involves assessing network security by simulating various attacks like Denial of Service (DoS); and network monitoring, which involves analyzing and inspecting network traffic.
-            </Item>
-            <Item
-                banner="/images/project/bestmods.png"
-                title="Best Mods"
-                link="https://bestmods.io"
-                openSource={true}
-                sourceLink="https://github.com/bestmods"
-                category="Gaming"
-            >
-                An open source website that serves as an index for game mods and allows users to easily find mods from many sources on the Internet.
-            </Item>
-            <Item
-                banner="/images/project/browsertf.png"
-                title="Browser.TF"
-                link="https://btf.bestservers.io"
-                openSource={true}
-                sourceLink="https://github.com/gamemann/Browser.TF"
-                category="Gaming"
-            >
-                A web-sided server browser for the game Team Fortress 2 I made back in 2015/2016 while in High School. The domain used to be browser.tf and fairly active, but was unfortunately lost in mid-2022. As a result, it is now btf.bestservers.io.
-            </Item>
-        </div>
+<Section
+    id="projects"
+    eyebrow="04 — Selected work"
+    title="Things I've built"
+    lead="A publisher, a modding platform, and a handful of tools that push packets faster than the kernel network stack normally allows."
+>
+    <div class="grid gap-4 lg:grid-cols-2">
+        {featured.map((project, i) => (
+            <Card project={project} featured={true} delay={i * 120} />
+        ))}
     </div>
-</section>
+
+    <div class="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {rest.map((project, i) => (
+            <Card project={project} delay={(i % 4) * 80} />
+        ))}
+    </div>
+</Section>

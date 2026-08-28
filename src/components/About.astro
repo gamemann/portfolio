@@ -1,0 +1,74 @@
+---
+import Section from "./ui/Section.astro"
+import { facts, timeline } from "../data/site"
+---
+
+<Section
+    id="about"
+    eyebrow="01 — Who I am"
+    title="A decade of building, breaking, and documenting"
+>
+    <div class="grid gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
+        <div class="space-y-5 text-base leading-relaxed text-white/65">
+            <p data-reveal="blur">
+                I'm a DevOps engineer with over a decade of hands-on experience across
+                development, automation, and system administration. It started at
+                thirteen, when I founded a gaming community and found myself running
+                dedicated servers on both Linux and Windows — which turned out to be a
+                very effective way to learn infrastructure.
+            </p>
+            <p data-reveal="blur" style="--reveal-delay:100ms">
+                Since then I've built and optimized web applications, networking tools,
+                and automation systems: kernel-level firewalls, packet generators, mod
+                platforms, cloud infrastructure, and the analytics pipelines behind
+                them. I like systems that stay fast under load, and I like writing down
+                how they work so the next person doesn't have to guess.
+            </p>
+            <p data-reveal="blur" style="--reveal-delay:200ms">
+                These days most of my time goes into my own projects, <a href="https://tekworks.net" target="_blank" rel="noopener noreferrer" class="text-link underline decoration-brand-400/40 underline-offset-4 transition hover:text-link-hover hover:decoration-accent-400">TekWorks</a> and{" "}
+                <a href="https://moddingcommunity.com" target="_blank" rel="noopener noreferrer" class="text-link underline decoration-brand-400/40 underline-offset-4 transition hover:text-link-hover hover:decoration-accent-400">The Modding Community</a>, plus a software role
+                at another company. I'm not looking for a new role right now, but I'm
+                always glad to connect! Come talk to me about packets, kernels, game
+                development, modding, or whatever you happen to be building.
+            </p>
+
+            <!-- Timeline -->
+            <ol class="mt-10 space-y-0 border-l border-white/10 pl-6">
+                {timeline.map((entry, i) => (
+                    <li
+                        data-reveal="left"
+                        style={`--reveal-delay:${i * 90}ms`}
+                        class="relative pb-8 last:pb-0"
+                    >
+                        <span class="absolute top-1.5 -left-[1.8125rem] h-2.5 w-2.5 rounded-full border-2 border-ink-950 bg-brand-400"></span>
+                        <p class="font-mono text-[11px] tracking-widest text-accent-300 uppercase">{entry.when}</p>
+                        <h3 class="mt-1 text-base font-bold">{entry.title}</h3>
+                        <p class="mt-1 text-sm text-white/55">{entry.body}</p>
+                    </li>
+                ))}
+            </ol>
+        </div>
+
+        <!-- Fact panel -->
+        <aside data-reveal="right" class="lg:sticky lg:top-28 lg:self-start">
+            <div class="surface rounded-2xl p-6 sm:p-7">
+                <h3 class="font-mono text-xs tracking-[0.22em] text-white/35 uppercase">At a glance</h3>
+                <dl class="mt-5 space-y-5">
+                    {facts.map((fact) => (
+                        <div>
+                            <dt class="text-[11px] font-semibold tracking-wider text-brand-300 uppercase">{fact.label}</dt>
+                            <dd class="mt-1 text-sm text-white/70">{fact.value}</dd>
+                        </div>
+                    ))}
+                </dl>
+
+                <div class="mt-7 border-t border-white/8 pt-5">
+                    <p class="text-sm text-white/50">
+                        Everything on this page is built with Astro, React, and Tailwind —
+                        and the source is public.
+                    </p>
+                </div>
+            </div>
+        </aside>
+    </div>
+</Section>

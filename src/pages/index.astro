@@ -1,36 +1,31 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro"
 
-import Welcome from '../components/Welcome.astro';
+import Nav from "../components/react/Nav"
+import Hero from "../components/Hero.astro"
+import About from "../components/About.astro"
 import Skillset from "../components/Skillset.astro"
 import Stack from "../components/Stack.astro"
 import Projects from "../components/Projects.astro"
 import Guides from "../components/Guides.astro"
+import Contact from "../components/Contact.astro"
+import Footer from "../components/Footer.astro"
 
-import Navigation from '../components/react/Navigation';
-import Flair from '../components/helper/Flair.astro';
-import ObserverProvider from '../components/react/Observer';
-import AboutMe from '../components/AboutMe.astro';
+import { navItems } from "../data/site"
 ---
 
 <Layout>
-    <ObserverProvider client:load>
-        <main class="min-h-screen">
-            <Navigation client:load />
-            <div class="[&>section]:p-10">
-                <Welcome />
+    <Nav client:load items={navItems} />
 
-                <AboutMe />
-                <Skillset />
-                <Stack />
-                <Projects />
-                <Guides />
-                <div class="pt-4 pb-8 flex justify-center sm:intersect:motion-preset-slide-left-md intersect-once">
-                    <a href="https://github.com/gamemann/portfolio" target="_blank">
-                        <Flair className="bg-btn-primary hover:bg-btn-primary-hover duration-100">Source Code</Flair>
-                    </a>
-                </div>
-            </div>
-        </main>
-    </ObserverProvider>
+    <main id="main">
+        <Hero />
+        <About />
+        <Skillset />
+        <Stack />
+        <Projects />
+        <Guides />
+        <Contact />
+    </main>
+
+    <Footer />
 </Layout>

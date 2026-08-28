@@ -1,124 +1,16 @@
 ---
-import CodeIcon from "../assets/stack/Code.svg"
-import ReactIcon from "../assets/stack/React.svg"
-import CssIcon from "../assets/stack/Css.svg"
-import DockerIcon from "../assets/stack/Docker.svg"
-import GoIcon from "../assets/stack/Go.svg"
-import HtmlIcon from "../assets/stack/Html.svg"
-import KubernetesIcon from "../assets/stack/Kubernetes.svg"
-import LinuxIcon from "../assets/stack/Linux.svg"
-import PythonIcon from "../assets/stack/Python.svg"
-import RustIcon from "../assets/stack/Rust.svg"
-import JsIcon from "../assets/stack/Js.svg"
-import CSharpIcon from "../assets/stack/Csharp.svg"
-import JavaIcon from "../assets/stack/Java.svg"
-import MysqlIcon from "../assets/stack/Mysql.svg"
-import PostgresqlIcon from "../assets/stack/Postgresql.svg"
-import WindowsIcon from "../assets/stack/Windows.svg"
-import MongoDbIcon from "../assets/stack/MongoDb.svg"
-import DjangoIcon from "../assets/stack/Django.svg"
-
-import StackWheel from "./react/Wheel"
-
-const wheelItems = [
-    {
-        title: "JS/TS",
-        icon: JsIcon.src,
-        expLevel: 10
-    },
-    {
-        title: "React",
-        icon: ReactIcon.src,
-        expLevel: 10
-    },
-    {
-        title: "CSS",
-        icon: CssIcon.src,
-        expLevel: 10
-    },
-    {
-        title: "HTML",
-        icon: HtmlIcon.src,
-        expLevel: 10
-    },
-    {
-        title: "Golang",
-        icon: GoIcon.src,
-        expLevel: 10
-    },
-    {
-        title: "Python",
-        icon: PythonIcon.src,
-        expLevel: 10
-    },
-    {
-        title: "C",
-        icon: CodeIcon.src,
-        expLevel: 10
-    },
-    {
-        title: "Rust",
-        icon: RustIcon.src,
-        expLevel: 3
-    },
-    {
-        title: "Docker",
-        icon: DockerIcon.src,
-        expLevel: 10
-    },
-    {
-        title: "Kubernetes",
-        icon: KubernetesIcon.src,
-        expLevel: 2
-    },
-    {
-        title: "C#",
-        icon: CSharpIcon.src,
-        expLevel: 5
-    },
-    {
-        title: "Java",
-        icon: JavaIcon.src,
-        expLevel: 1
-    },
-    {
-        title: "Linux",
-        icon: LinuxIcon.src,
-        expLevel: 10
-    },
-    {
-        title: "MySQL",
-        icon: MysqlIcon.src,
-        expLevel: 9
-    },
-    {
-        title: "PostgreSQL",
-        icon: PostgresqlIcon.src,
-        expLevel: 9
-    },
-    {
-        title: "Windows",
-        icon: WindowsIcon.src,
-        expLevel: 9
-    },
-    {
-        title: "MongoDB",
-        icon: MongoDbIcon.src,
-        expLevel: 3
-    },
-    {
-        title: "Django",
-        icon: DjangoIcon.src,
-        expLevel: 4
-    }
-].sort((a, b) => b.expLevel - a.expLevel)
+import Section from "./ui/Section.astro"
+import StackView from "./react/Stack"
+import { stackGroups, stackItems } from "../data/stack"
 ---
 
-<section id="stack">
-    <div class="container mx-auto h-full">
-        <h2 class="text-white text-3xl font-extrabold mb-4">My Stack</h2>
-        <div class="flex justify-center items-center sm:intersect:animate-scale-in-slow intersect-once my-20">
-            <StackWheel client:load items={wheelItems} radius={250.0} />
-        </div>
+<Section
+    id="stack"
+    eyebrow="03 — What I build with"
+    title="My stack"
+    lead="Ranked by how much time I've actually spent in each. The orbit puts the deepest mileage closest to the centre; the grid says the same thing as a plain list."
+>
+    <div data-reveal="fade">
+        <StackView client:visible items={stackItems} groups={stackGroups} />
     </div>
-</section>
+</Section>

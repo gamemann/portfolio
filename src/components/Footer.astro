@@ -1,0 +1,30 @@
+---
+import { navItems, site } from "../data/site"
+
+const year = new Date().getFullYear()
+---
+
+<footer class="border-t border-white/8 px-6 py-10 sm:px-8">
+    <div class="mx-auto flex w-full max-w-6xl flex-col items-center gap-6 sm:flex-row sm:justify-between">
+        <div class="text-center sm:text-left">
+            <p class="font-display text-sm font-bold text-white">{site.name}</p>
+            <p class="mt-1 text-xs text-white/40">
+                © {year} · Built with Astro, React &amp; Tailwind CSS
+            </p>
+        </div>
+
+        <nav aria-label="Footer" class="flex flex-wrap justify-center gap-x-5 gap-y-2">
+            {navItems.map((item) => (
+                <a href={`#${item.sec}`} class="text-xs text-white/45 transition hover:text-white">
+                    {item.title}
+                </a>
+            ))}
+            <a
+                href={site.sourceCode}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-xs text-accent-300/80 transition hover:text-accent-300"
+            >Source code ↗</a>
+        </nav>
+    </div>
+</footer>

@@ -1,24 +1,67 @@
 ---
 import "../styles/global.css"
 
+import "@fontsource-variable/inter"
+import "@fontsource-variable/jetbrains-mono"
+import "@fontsource/poppins/600.css"
 import "@fontsource/poppins/700.css"
+import "@fontsource/poppins/800.css"
+
+import { site } from "../data/site"
+
+interface Props {
+    title?: string
+    description?: string
+}
+
+const { title = `${site.name} — ${site.role}`, description = site.description } = Astro.props
 
 const GA = import.meta.env.PUBLIC_GOOGLE_ANALYTICS_ID
+
+// Umami. The website ID gates the whole thing; the host defaults to Umami
+// Cloud so self-hosters only have to point it at their own instance.
+const UMAMI_ID = import.meta.env.PUBLIC_UMAMI_WEBSITE_ID
+const UMAMI_HOST = (import.meta.env.PUBLIC_UMAMI_HOST || "https://cloud.umami.is").replace(/\/+$/, "")
+// Session replay is a second script *alongside* the tracker, not a replacement.
+const UMAMI_REPLAY = ["true", "1", "yes"].includes(
+    String(import.meta.env.PUBLIC_UMAMI_REPLAY ?? "").trim().toLowerCase()
+)
+
+const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url)
 ---
 
 <!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Christian Deacon's Portfolio</title>
-        <meta name="description" content="Christian Deacon's portfolio. A DevOps engineer with 10+ years experience." />
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="generator" content={Astro.generator} />
+        <meta name="theme-color" content="#05040e" />
+        <meta name="color-scheme" content="dark" />
+
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <meta name="author" content={site.name} />
+        <link rel="canonical" href={canonical} />
+        <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={canonical} />
+        <meta property="og:site_name" content={site.name} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+
+        <script is:inline>
+            document.documentElement.classList.remove("no-js")
+        </script>
+
         {GA && (
             <>
-                <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA}`}></script>
-                <script define:vars={{ GA }}>
+                <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${GA}`}></script>
+                <script is:inline define:vars={{ GA }}>
                     window.dataLayer = window.dataLayer || [];
                     function gtag(){dataLayer.push(arguments);}
                     gtag('js', new Date());
@@ -26,8 +69,114 @@ const GA = import.meta.env.PUBLIC_GOOGLE_ANALYTICS_ID
                 </script>
             </>
         )}
-	</head>
-	<body>
-		<slot />
-	</body>
+
+        {UMAMI_ID && (
+            <>
+                <script
+                    is:inline
+                    defer
+                    src={`${UMAMI_HOST}/script.js`}
+                    data-website-id={UMAMI_ID}
+                ></script>
+                {UMAMI_REPLAY && (
+                    <script
+                        is:inline
+                        defer
+                        src={`${UMAMI_HOST}/recorder.js`}
+                        data-website-id={UMAMI_ID}
+                    ></script>
+                )}
+            </>
+        )}
+    </head>
+    <body class="relative">
+        <!-- Ambient background. Fixed, pointer-transparent, purely decorative. -->
+        <div class="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden="true">
+            <div class="absolute inset-0 bg-ink-950"></div>
+
+            <!-- Aurora blobs. Gradient-painted, not blurred; see the `aurora`
+                 utility for why. Only transform animates, so these drift on the
+                 compositor without repainting. -->
+            <div
+                class="aurora absolute -top-48 left-1/2 h-[52rem] w-[52rem] -translate-x-1/2 animate-drift"
+                style="--aurora-tint:rgba(78,73,171,0.34)"
+            ></div>
+            <div
+                class="aurora absolute top-1/3 -left-48 h-[40rem] w-[40rem] animate-drift [animation-delay:-8s]"
+                style="--aurora-tint:rgba(6,182,212,0.16)"
+            ></div>
+            <div
+                class="aurora absolute -right-40 bottom-0 h-[46rem] w-[46rem] animate-drift [animation-delay:-16s]"
+                style="--aurora-tint:rgba(108,99,255,0.2)"
+            ></div>
+
+            <!-- Grid -->
+            <div
+                class="absolute inset-0 opacity-[0.28] [mask-image:radial-gradient(ellipse_at_50%_0%,#000_10%,transparent_75%)]"
+                style="background-image:linear-gradient(to right,rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(to bottom,rgba(255,255,255,.08) 1px,transparent 1px);background-size:64px 64px"
+            ></div>
+
+            <!-- Grain -->
+            <div
+                class="absolute inset-0 opacity-[0.03]"
+                style="background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E&quot;)"
+            ></div>
+        </div>
+
+        <a
+            href="#main"
+            class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-100 focus:rounded-lg focus:bg-brand-600 focus:px-4 focus:py-2 focus:font-semibold focus:text-white"
+        >Skip to content</a>
+
+        <slot />
+
+        <script is:inline>
+            // Scroll reveal. One observer for every [data-reveal] element on the
+            // page; elements stay revealed once they have been seen.
+            ;(() => {
+                const nodes = document.querySelectorAll("[data-reveal]")
+
+                if (!("IntersectionObserver" in window)) {
+                    nodes.forEach((n) => n.setAttribute("data-revealed", ""))
+
+                    return
+                }
+
+                const io = new IntersectionObserver(
+                    (entries) => {
+                        for (const entry of entries) {
+                            if (!entry.isIntersecting)
+                                continue
+
+                            entry.target.setAttribute("data-revealed", "")
+                            io.unobserve(entry.target)
+                        }
+                    },
+                    { rootMargin: "0px 0px -12% 0px", threshold: 0.08 }
+                )
+
+                nodes.forEach((n) => io.observe(n))
+            })()
+
+            // Park the decorative animations in whichever sections are off
+            // screen. CSS animations run regardless of visibility, so without
+            // this the hero's rainbow and carets repaint forever.
+            ;(() => {
+                const sections = document.querySelectorAll("main > section")
+
+                if (!("IntersectionObserver" in window) || sections.length === 0)
+                    return
+
+                const io = new IntersectionObserver(
+                    (entries) => {
+                        for (const entry of entries)
+                            entry.target.toggleAttribute("data-offscreen", !entry.isIntersecting)
+                    },
+                    { rootMargin: "150px 0px" }
+                )
+
+                sections.forEach((s) => io.observe(s))
+            })()
+        </script>
+    </body>
 </html>

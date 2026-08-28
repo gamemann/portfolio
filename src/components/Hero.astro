@@ -1,0 +1,292 @@
+---
+import GithubIcon from "../assets/welcome/Github.svg"
+import LinkedinIcon from "../assets/welcome/Linkedin.svg"
+import YoutubeIcon from "../assets/welcome/Youtube.svg"
+
+import RoleRotator from "./react/RoleRotator"
+import Button from "./ui/Button.astro"
+import { site, stats } from "../data/site"
+
+const icons: Record<string, string> = {
+    Github: GithubIcon.src,
+    Linkedin: LinkedinIcon.src,
+    Youtube: YoutubeIcon.src
+}
+
+const links = [
+    { name: "GitHub", href: "https://github.com/gamemann", icon: "Github" },
+    { name: "LinkedIn", href: "https://www.linkedin.com/in/christiandeacon/", icon: "Linkedin" },
+    { name: "YouTube", href: "https://www.youtube.com/@seriouslynotserious01", icon: "Youtube" }
+]
+
+// Split the name into words, then characters, keeping one running index so the
+// per-character type-in stagger stays continuous across the whole headline.
+let charIndex = 0
+const nameChars = site.name
+    .split(" ")
+    .map((word) => [...word].map((char) => ({ char, i: charIndex++ })))
+
+const roles = [
+    "DevOps Engineer",
+    "Systems Programmer",
+    "Network Engineer",
+    "Game Developer",
+    "Full-Stack Developer",
+    "Technical Writer"
+]
+
+const terminal = [
+    { prompt: "whoami", out: "christian-deacon" },
+    { prompt: "cat ./skills.txt", out: "devops,system,networking,full-stack,game-development,technical-writing" },
+    { prompt: "ls ./ventures", out: "tekworks/  the-modding-community/" },
+    { prompt: "uptime -f json", out: `{ "life":"28y", "dev":">15y" }` }
+]
+
+// The closing command answers with real terminal art: Tux painted a line at a
+// time under a lolcat rainbow, with the stats beside him. Every line gets a
+// running --i so the paint stagger and the gradient phase stay in step.
+const tux = [
+    "   .--.",
+    "  |o_o |",
+    "  |:_/ |",
+    " //   \\ \\",
+    "(|     | )",
+    "/'\\_   _/`\\",
+    "\\___)=(___/"
+]
+
+// Split so the heart can beat as one unit while every character still gets its
+// own box for the matrix scramble. The running index feeds the decode stagger.
+const fyiText = "I <3 Linux"
+let fyiIndex = 0
+const fyiSegments = [
+    { text: "I ", heart: false },
+    { text: "<3", heart: true },
+    { text: " Linux", heart: false }
+].map((seg) => ({
+    ...seg,
+    chars: [...seg.text].map((char) => ({ char, i: fyiIndex++ }))
+}))
+---
+
+<section id="hero" class="relative flex min-h-screen scroll-mt-28 items-center px-6 pt-32 pb-24 sm:px-8">
+    <div class="mx-auto grid w-full max-w-6xl items-center gap-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+        <!-- Intro -->
+        <div class="text-center lg:text-left">
+            <p
+                data-reveal="down"
+                class="mb-6 inline-flex items-center gap-2.5 rounded-full border border-brand-400/25 bg-brand-500/10 px-3.5 py-1.5 font-mono text-[11px] tracking-wider text-brand-300 uppercase"
+            >
+                <span class="relative flex h-1.5 w-1.5">
+                    <span class="absolute inline-flex h-full w-full rounded-full bg-brand-400 animate-pulse-ring"></span>
+                    <span class="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand-400"></span>
+                </span>
+                Not looking — always up for a chat
+            </p>
+
+            <h1
+                class="font-display text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl"
+                aria-label={site.name}
+            >
+                {nameChars.map((word, w) => (
+                    <>
+                        {w > 0 && " "}
+                        <span aria-hidden="true" class="inline-block whitespace-nowrap">
+                            {word.map(({ char, i }) => (
+                                <span class="type-char" style={`--i:${i}`}>{char}</span>
+                            ))}
+                        </span>
+                    </>
+                ))}
+            </h1>
+
+            <p data-reveal="up" style="--reveal-delay:900ms" class="mt-4 min-h-[1.75rem] font-mono text-lg text-accent-300 sm:min-h-[1.9rem] sm:text-xl">
+                <RoleRotator client:load roles={roles} />
+            </p>
+
+            <p
+                data-reveal="up"
+                style="--reveal-delay:520ms"
+                class="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/60 lg:mx-0 sm:text-lg"
+            >
+                {site.tagline}
+            </p>
+
+            <div
+                data-reveal="up"
+                style="--reveal-delay:620ms"
+                class="mt-9 flex flex-wrap items-center justify-center gap-3 lg:justify-start"
+            >
+                <Button href="#projects">
+                    See my work
+                    <span class="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
+                </Button>
+                <Button href="#contact" variant="ghost">Say hello</Button>
+            </div>
+
+            <div
+                data-reveal="up"
+                style="--reveal-delay:700ms"
+                class="mt-9 flex items-center justify-center gap-3 lg:justify-start"
+            >
+                {links.map((l) => (
+                    <a
+                        href={l.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={l.name}
+                        class="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/4 transition duration-200 hover:-translate-y-1 hover:border-brand-400/40 hover:bg-brand-500/15"
+                    >
+                        <img src={icons[l.icon]} alt="" width="20" height="20" class="h-5 w-5 opacity-70" />
+                    </a>
+                ))}
+            </div>
+        </div>
+
+        <!-- Terminal card -->
+        <div data-reveal="zoom" style="--reveal-delay:300ms" class="relative">
+            <div class="aurora-box absolute -inset-10 -z-10" style="--aurora-tint:rgba(108,99,255,0.18)"></div>
+
+            <div class="surface overflow-hidden rounded-2xl shadow-2xl shadow-black/60">
+                <div class="flex items-center gap-2 border-b border-white/8 bg-white/4 px-4 py-3">
+                    <span class="h-3 w-3 rounded-full bg-red-400/70"></span>
+                    <span class="h-3 w-3 rounded-full bg-yellow-400/70"></span>
+                    <span class="h-3 w-3 rounded-full bg-green-400/70"></span>
+                    <p class="ml-2 font-mono text-xs text-white/35">~/portfolio</p>
+                </div>
+
+                <div class="space-y-3.5 p-5 font-mono text-[13px] leading-relaxed sm:p-6">
+                    {terminal.map((line, i) => (
+                        <div data-reveal="fade" style={`--reveal-delay:${600 + i * 180}ms`}>
+                            <p class="text-white/40">
+                                <span class="text-brand-400">➜</span>
+                                <span class="ml-2 text-accent-300">{line.prompt}</span>
+                            </p>
+                            <p class="mt-1 pl-5 text-white/70">{line.out}</p>
+                        </div>
+                    ))}
+                    <div data-reveal="fade" style="--reveal-delay:1320ms">
+                        <p class="text-white/40">
+                            <span class="text-brand-400">➜</span>
+                            <span class="ml-2 text-accent-300">fyi</span>
+                        </p>
+                        <div
+                            class="mt-1.5 flex items-center gap-4 pl-5"
+                            style="--paint-delay:1550ms;--paint-speed:70ms"
+                            role="img"
+                            aria-label="I love Linux, beside ASCII art of Tux, the Linux penguin."
+                        >
+                            <p
+                                class="matrix-text text-[30px] leading-none font-bold"
+                                data-matrix
+                                aria-label={fyiText}
+                            >
+                                {fyiSegments.map((seg) => (
+                                    <span class:list={[seg.heart && "heartbeat text-rose-400"]}>
+                                        {seg.chars.map((c) => (
+                                            <span aria-hidden="true" data-c={c.char}>{c.char}</span>
+                                        ))}
+                                    </span>
+                                ))}
+                            </p>
+
+                            <div class="flex flex-col text-[8px] leading-[1.08]" aria-hidden="true">
+                                {tux.map((line, i) => (
+                                    <span class="lolcat whitespace-pre" style={`--i:${i}`}>{line}</span>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    <p data-reveal="fade" style="--reveal-delay:2650ms" class="pt-1 text-white/40">
+                        <span class="text-brand-400">➜</span>
+                        <span class="ml-2 inline-block h-4 w-2 translate-y-0.5 bg-accent-300 [animation:caret-blink_1.1s_step-end_infinite]"></span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Stat strip -->
+            <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                {stats.map((s, i) => (
+                    <div
+                        data-reveal="up"
+                        style={`--reveal-delay:${700 + i * 90}ms`}
+                        class="rounded-xl border border-white/8 bg-white/3 px-3 py-3 text-center backdrop-blur"
+                    >
+                        <p class="font-display text-lg font-extrabold text-white">{s.value}</p>
+                        <p class="mt-0.5 text-[11px] text-white/45">{s.label}</p>
+                    </div>
+                ))}
+            </div>
+        </div>
+    </div>
+
+    <a
+        href="#about"
+        aria-label="Scroll to About"
+        class="absolute bottom-8 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-white/30 transition hover:text-white/70 lg:flex"
+    >
+        <span class="font-mono text-[10px] tracking-[0.25em] uppercase">Scroll</span>
+        <span class="animate-float text-lg">↓</span>
+    </a>
+</section>
+
+<script>
+    // Matrix-style decode for the fyi output. The real characters are already in
+    // the HTML, so this only ever scrambles what is there and puts it back;
+    // without JS, or with reduced motion, the line just reads normally.
+    const host = document.querySelector<HTMLElement>("[data-matrix]")
+
+    if (host && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        const GLYPHS = "01<>{}[]/\\|=+*#$%&^~"
+        const cells = [...host.querySelectorAll<HTMLElement>("[data-c]")]
+
+        // Matches the --paint-delay on the surrounding block, so the decode
+        // starts as the penguin begins painting in beside it.
+        const START = 1550
+        const PER_CELL = 85
+        const SWAP_EVERY = 55
+
+        const settleAt = cells.map((_, i) => START + 260 + i * PER_CELL)
+
+        cells.forEach((cell) => {
+            if (cell.dataset.c !== " ") {
+                cell.dataset.scrambling = ""
+                cell.textContent = GLYPHS[0]
+            }
+        })
+
+        let lastSwap = 0
+
+        const frame = (now: number) => {
+            let pending = false
+
+            for (let i = 0; i < cells.length; i++) {
+                const cell = cells[i]
+                const final = cell.dataset.c ?? ""
+
+                if (now >= settleAt[i]) {
+                    if (cell.textContent !== final) {
+                        cell.textContent = final
+                        delete cell.dataset.scrambling
+                    }
+
+                    continue
+                }
+
+                pending = true
+
+                if (final !== " " && now - lastSwap >= SWAP_EVERY)
+                    cell.textContent = GLYPHS[Math.floor(Math.random() * GLYPHS.length)]
+            }
+
+            if (now - lastSwap >= SWAP_EVERY)
+                lastSwap = now
+
+            if (pending)
+                requestAnimationFrame(frame)
+        }
+
+        requestAnimationFrame(frame)
+    }
+</script>

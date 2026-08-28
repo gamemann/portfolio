@@ -1,0 +1,62 @@
+---
+import GithubIcon from "../assets/welcome/Github.svg"
+import LinkedinIcon from "../assets/welcome/Linkedin.svg"
+import YoutubeIcon from "../assets/welcome/Youtube.svg"
+
+import { emailEncoded } from "../data/site"
+
+import EmailButton from "./react/EmailButton"
+import Button from "./ui/Button.astro"
+
+const email64 = import.meta.env.PUBLIC_EMAIL_ENCODE || emailEncoded
+
+const links = [
+    { name: "GitHub", href: "https://github.com/gamemann", icon: GithubIcon.src },
+    { name: "LinkedIn", href: "https://www.linkedin.com/in/christiandeacon/", icon: LinkedinIcon.src },
+    { name: "YouTube", href: "https://www.youtube.com/@cdeaconado", icon: YoutubeIcon.src }
+]
+---
+
+<section id="contact" class="relative scroll-mt-28 px-6 py-24 sm:px-8 sm:py-32">
+    <div class="mx-auto w-full max-w-4xl">
+        <div
+            data-reveal="zoom"
+            class="surface relative overflow-hidden rounded-3xl px-6 py-14 text-center sm:px-12 sm:py-16"
+        >
+            <div class="aurora absolute -top-32 left-1/2 h-80 w-80 -translate-x-1/2" style="--aurora-tint:rgba(108,99,255,0.3)"></div>
+
+            <div class="relative">
+                <p class="font-mono text-xs tracking-[0.28em] text-accent-300 uppercase">06 — Contact</p>
+                <h2 class="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl md:text-5xl">
+                    Say <span class="text-gradient">hello</span>.
+                </h2>
+                <p class="mx-auto mt-5 max-w-xl leading-relaxed text-white/60">
+                    I'm not open to new work right now, but I'm always open to
+                    connecting — questions about anything above, talking shop
+                    about packets, kernels, or mod tooling, or just saying hello.
+                </p>
+
+                <div class="mt-9 flex flex-wrap items-center justify-center gap-3">
+                    <EmailButton client:visible email64={email64} />
+                    <Button href="https://github.com/gamemann" newTab={true} variant="ghost">
+                        Browse my code
+                    </Button>
+                </div>
+
+                <div class="mt-10 flex items-center justify-center gap-3">
+                    {links.map((l) => (
+                        <a
+                            href={l.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={l.name}
+                            class="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/4 transition duration-200 hover:-translate-y-1 hover:border-brand-400/40 hover:bg-brand-500/15"
+                        >
+                            <img src={l.icon} alt="" width="20" height="20" class="h-5 w-5 opacity-70" />
+                        </a>
+                    ))}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

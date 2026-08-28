@@ -1,0 +1,41 @@
+---
+interface Props {
+    id: string
+    eyebrow: string
+    title: string
+    lead?: string
+    class?: string
+}
+
+const { id, eyebrow, title, lead, class: className = "" } = Astro.props
+---
+
+<section id={id} class={`relative scroll-mt-28 px-6 py-20 sm:px-8 sm:py-28 ${className}`}>
+    <div class="mx-auto w-full max-w-6xl">
+        <header class="mb-12 sm:mb-16">
+            <p
+                data-reveal="up"
+                class="mb-3 font-mono text-xs tracking-[0.28em] text-accent-300 uppercase"
+            >{eyebrow}</p>
+            <h2
+                data-reveal="up"
+                style="--reveal-delay:60ms"
+                class="text-3xl font-extrabold tracking-tight sm:text-4xl md:text-5xl"
+            >{title}</h2>
+            <div
+                data-reveal="left"
+                style="--reveal-delay:120ms"
+                class="mt-5 h-px w-full max-w-sm rule-fade"
+            ></div>
+            {lead && (
+                <p
+                    data-reveal="up"
+                    style="--reveal-delay:150ms"
+                    class="mt-5 max-w-2xl text-base leading-relaxed text-white/60"
+                >{lead}</p>
+            )}
+        </header>
+
+        <slot />
+    </div>
+</section>

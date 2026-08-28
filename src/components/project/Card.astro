@@ -1,0 +1,193 @@
+---
+import Badge from "../ui/Badge.astro"
+import type { Project } from "../../data/projects"
+
+interface Props {
+    project: Project
+    featured?: boolean
+    delay?: number
+}
+
+const { project, featured = false, delay = 0 } = Astro.props
+const banner = project.banner || "/images/project/default.png"
+
+const chip = "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold leading-none tracking-tight shadow-sm shadow-black/40 backdrop-blur-md"
+
+const statusTone = project.maintained
+    ? "border-mint-400/35 bg-ink-950/85 text-mint-400"
+    : "border-white/15 bg-ink-950/85 text-white/60"
+---
+
+{featured ? (
+    <article
+        data-reveal="zoom"
+        style={`--reveal-delay:${delay}ms`}
+        class="surface glow-border group relative flex h-full flex-col rounded-2xl transition duration-300 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-black/60"
+    >
+        <a
+            href={project.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="relative block overflow-hidden rounded-t-2xl"
+            tabindex="-1"
+            aria-hidden="true"
+        >
+            <img
+                src={banner}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                class="h-56 w-full object-cover brightness-[0.72] saturate-[0.85] transition duration-500 group-hover:scale-[1.04] group-hover:brightness-100 group-hover:saturate-100 sm:h-72"
+            />
+            <div class="absolute inset-0 bg-linear-to-t from-ink-900 via-ink-900/35 to-transparent"></div>
+        </a>
+
+        <span class={`absolute top-3 left-3 z-10 border-accent-400/35 bg-ink-950/85 text-accent-300 ${chip}`}>
+            Featured
+        </span>
+
+        <span class={`absolute top-3 right-3 z-10 ${statusTone} ${chip}`}>
+            {project.maintained && <span class="h-1.5 w-1.5 rounded-full bg-mint-400"></span>}
+            {project.maintained ? "Maintained" : "Unmaintained"}
+        </span>
+
+        <div class="flex grow flex-col p-5 sm:p-6">
+            <div class="flex flex-wrap items-center gap-2">
+                <Badge tone="brand">{project.category}</Badge>
+                {project.role && <span class="font-mono text-[11px] text-white/35">{project.role}</span>}
+            </div>
+
+            <h3 class="mt-3 text-2xl font-bold">
+                <a href={project.link} target="_blank" rel="noopener noreferrer" class="transition hover:text-brand-300">
+                    {project.title}
+                </a>
+            </h3>
+
+            <p class="mt-2.5 grow text-sm leading-relaxed text-white/58 sm:text-[15px]">{project.summary}</p>
+
+            <div class="mt-5 flex flex-wrap gap-1.5">
+                {project.tags.map((tag) => <Badge>{tag}</Badge>)}
+            </div>
+
+            <div class="mt-6 flex items-center gap-4 border-t border-white/8 pt-4 text-sm">
+                <a
+                    href={project.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex items-center gap-1.5 font-semibold text-white/85 transition hover:text-accent-300"
+                >
+                    Visit
+                    <span class="transition-transform duration-200 group-hover:translate-x-0.5">↗</span>
+                </a>
+
+                {project.openSource && project.sourceLink && (
+                    <a
+                        href={project.sourceLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-flex items-center gap-1.5 text-white/45 transition hover:text-mint-400"
+                    >
+                        <svg viewBox="0 0 24 24" class="h-4 w-4" fill="currentColor" aria-hidden="true">
+                            <path d="M12 .5C5.73.5.9 5.33.9 11.6c0 4.9 3.17 9.06 7.57 10.53.55.1.76-.24.76-.53v-1.9c-3.08.67-3.73-1.32-3.73-1.32-.5-1.29-1.23-1.63-1.23-1.63-1-.69.08-.67.08-.67 1.11.08 1.7 1.15 1.7 1.15.99 1.7 2.59 1.21 3.22.93.1-.72.39-1.21.7-1.49-2.46-.28-5.05-1.24-5.05-5.5 0-1.22.43-2.21 1.15-2.99-.12-.28-.5-1.42.11-2.95 0 0 .94-.3 3.07 1.14a10.6 10.6 0 0 1 5.6 0c2.13-1.44 3.06-1.14 3.06-1.14.61 1.53.23 2.67.12 2.95.72.78 1.15 1.77 1.15 2.99 0 4.27-2.6 5.21-5.07 5.49.4.34.76 1.02.76 2.06v3.06c0 .3.2.64.77.53 4.4-1.47 7.56-5.63 7.56-10.53C23.1 5.33 18.27.5 12 .5Z" />
+                        </svg>
+                        Source
+                    </a>
+                )}
+
+                {project.openSource && (
+                    <span class="ml-auto font-mono text-[11px] text-mint-400/70">open source</span>
+                )}
+            </div>
+        </div>
+    </article>
+) : (
+    /*
+     * Compact card. Fixed height, full-bleed banner, and only the meta row and
+     * title showing. The detail block sits in a zero-height grid row anchored to
+     * the bottom of the card, so opening it grows upward over the banner rather
+     * than pushing the card — the footprint never changes. Collapsing is gated
+     * behind can-hover, so touch devices get the whole card straight away.
+     */
+    <article
+        data-reveal="up"
+        style={`--reveal-delay:${delay}ms`}
+        class="group relative h-72 overflow-hidden rounded-2xl ring-1 ring-white/8 transition duration-300 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-black/60 hover:ring-brand-400/35 focus-within:-translate-y-1.5 focus-within:ring-brand-400/35"
+    >
+        <a
+            href={project.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="absolute inset-0"
+            tabindex="-1"
+            aria-hidden="true"
+        >
+            <img
+                src={banner}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                class="h-full w-full object-cover brightness-[0.72] saturate-[0.9] transition duration-500 group-hover:scale-[1.05] group-focus-within:scale-[1.05]"
+            />
+        </a>
+
+        <span class={`absolute top-3 right-3 z-10 ${statusTone} ${chip}`}>
+            {project.maintained && <span class="h-1.5 w-1.5 rounded-full bg-mint-400"></span>}
+            {project.maintained ? "Maintained" : "Unmaintained"}
+        </span>
+
+        <!-- Keeps the title legible over any banner. -->
+        <div class="pointer-events-none absolute inset-0 bg-linear-to-t from-ink-950 via-ink-950/65 to-ink-950/5"></div>
+
+        <!-- Darkens the banner once the detail block is open. -->
+        <div class="pointer-events-none absolute inset-0 bg-ink-950/80 opacity-0 transition-opacity duration-400 group-hover:opacity-100 group-focus-within:opacity-100"></div>
+
+        <div class="absolute inset-x-0 bottom-0 p-5">
+            <div class="flex flex-wrap items-center gap-2">
+                <Badge tone="brand">{project.category}</Badge>
+                {project.role && <span class="font-mono text-[11px] text-white/40">{project.role}</span>}
+            </div>
+
+            <h3 class="mt-2 line-clamp-2 text-lg leading-snug font-bold">
+                <a href={project.link} target="_blank" rel="noopener noreferrer" class="transition hover:text-brand-300">
+                    {project.title}
+                </a>
+            </h3>
+
+            <div class="grid grid-rows-[1fr] transition-[grid-template-rows] duration-500 ease-out-expo can-hover:grid-rows-[0fr] can-hover:group-hover:grid-rows-[1fr] can-hover:group-focus-within:grid-rows-[1fr]">
+                <div class="overflow-hidden">
+                    <p class="mt-2 line-clamp-4 text-sm leading-relaxed text-white/60">{project.summary}</p>
+
+                    <div class="mt-3 flex flex-wrap gap-1.5">
+                        {project.tags.slice(0, 2).map((tag) => <Badge>{tag}</Badge>)}
+                    </div>
+
+                    <div class="mt-3 flex items-center gap-4 text-sm">
+                        <a
+                            href={project.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="inline-flex items-center gap-1.5 font-semibold text-white/85 transition hover:text-accent-300"
+                        >
+                            Visit
+                            <span class="transition-transform duration-200 group-hover:translate-x-0.5">↗</span>
+                        </a>
+
+                        {project.openSource && project.sourceLink && (
+                            <a
+                                href={project.sourceLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="inline-flex items-center gap-1.5 text-white/45 transition hover:text-mint-400"
+                            >
+                                <svg viewBox="0 0 24 24" class="h-4 w-4" fill="currentColor" aria-hidden="true">
+                                    <path d="M12 .5C5.73.5.9 5.33.9 11.6c0 4.9 3.17 9.06 7.57 10.53.55.1.76-.24.76-.53v-1.9c-3.08.67-3.73-1.32-3.73-1.32-.5-1.29-1.23-1.63-1.23-1.63-1-.69.08-.67.08-.67 1.11.08 1.7 1.15 1.7 1.15.99 1.7 2.59 1.21 3.22.93.1-.72.39-1.21.7-1.49-2.46-.28-5.05-1.24-5.05-5.5 0-1.22.43-2.21 1.15-2.99-.12-.28-.5-1.42.11-2.95 0 0 .94-.3 3.07 1.14a10.6 10.6 0 0 1 5.6 0c2.13-1.44 3.06-1.14 3.06-1.14.61 1.53.23 2.67.12 2.95.72.78 1.15 1.77 1.15 2.99 0 4.27-2.6 5.21-5.07 5.49.4.34.76 1.02.76 2.06v3.06c0 .3.2.64.77.53 4.4-1.47 7.56-5.63 7.56-10.53C23.1 5.33 18.27.5 12 .5Z" />
+                                </svg>
+                                Source
+                            </a>
+                        )}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </article>
+)}

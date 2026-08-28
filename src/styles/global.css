@@ -1,37 +1,450 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
+/* ---------------------------------------------------------------------------
+ * Design tokens
+ * ------------------------------------------------------------------------ */
+@theme {
+    /* Ink — the deep violet-black the whole site sits on. */
+    --color-ink-950: #05040e;
+    --color-ink-900: #0a0819;
+    --color-ink-850: #0f0d26;
+    --color-ink-800: #141234;
+    --color-ink-700: #1f1d43;
+    --color-ink-600: #2c2a54;
+    --color-ink-500: #3d3a6f;
+
+    /* Brand — the indigo/violet carried over from the original palette. */
+    --color-brand-300: #b3aeff;
+    --color-brand-400: #8b85ff;
+    --color-brand-500: #6c63ff;
+    --color-brand-600: #4e49ab;
+    --color-brand-700: #48439d;
+
+    /* Accent — cyan, used for highlights, meters and links-on-hover. */
+    --color-accent-300: #7dd3fc;
+    --color-accent-400: #22d3ee;
+    --color-accent-500: #06b6d4;
+
+    --color-mint-400: #34d399;
+    --color-link: #aca9da;
+    --color-link-hover: #d7d5f2;
+
+    /* Typography */
+    --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+    --font-display: "Poppins", "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+    --font-mono: "JetBrains Mono Variable", ui-monospace, "SFMono-Regular", monospace;
+
+    /* Motion */
+    --animate-float: float 7s ease-in-out infinite;
+    --animate-pulse-ring: pulse-ring 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    --animate-shimmer: shimmer 2.6s linear infinite;
+    --animate-drift: drift 26s ease-in-out infinite alternate;
+
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+    --breakpoint-xs: 400px;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-12px); }
+}
+
+@keyframes pulse-ring {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: 0.35; transform: scale(1.9); }
+}
+
+@keyframes shimmer {
+    0%   { background-position: -160% 0; }
+    100% { background-position: 260% 0; }
+}
+
+@keyframes drift {
+    0%   { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(5%, -7%, 0); }
+}
+
+@keyframes orbit-spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+@keyframes orbit-counter {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(-360deg); }
+}
+
+@keyframes caret-blink {
+    0%, 45%   { opacity: 1; }
+    55%, 100% { opacity: 0; }
+}
+
+/* ---------------------------------------------------------------------------
+ * Base
+ * ------------------------------------------------------------------------ */
 @layer base {
-	body {
-        @apply m-0 w-full h-full text-gray-100 bg-gradient-to-b from-primary-1 to-primary-2;
-	}
-
-    section {
-        @apply px-6 py-10;
+    html {
+        scroll-behavior: smooth;
+        /* Clears the floating navigation when jumping to an anchor. */
+        scroll-padding-top: 7rem;
+        -webkit-text-size-adjust: 100%;
     }
 
-    p > a {
-        @apply text-link;
+    body {
+        margin: 0;
+        width: 100%;
+        min-height: 100%;
+        background-color: var(--color-ink-950);
+        color: --alpha(var(--color-white) / 72%);
+        font-family: var(--font-sans);
+        font-synthesis-weight: none;
+        text-rendering: optimizeLegibility;
+        overflow-x: hidden;
+    }
 
-        &:hover {
-            @apply text-link-hover;
-        }
+    h1, h2, h3, h4 {
+        font-family: var(--font-display);
+        color: var(--color-white);
+        text-wrap: balance;
+    }
+
+    p {
+        text-wrap: pretty;
+    }
+
+    ::selection {
+        background-color: --alpha(var(--color-brand-500) / 45%);
+        color: var(--color-white);
+    }
+
+    :focus-visible {
+        outline: 2px solid var(--color-accent-400);
+        outline-offset: 3px;
+        border-radius: 4px;
     }
 
     ::-webkit-scrollbar {
-        @apply w-2;
-        @apply rounded;
+        width: 10px;
+        height: 10px;
     }
-    
+
     ::-webkit-scrollbar-track {
-        @apply bg-secondary-1;
+        background-color: var(--color-ink-900);
     }
-    
+
     ::-webkit-scrollbar-thumb {
-        @apply bg-secondary-2;
-        
-        @apply rounded-lg;
+        background-color: var(--color-ink-600);
+        border-radius: 9999px;
+        border: 2px solid var(--color-ink-900);
     }
-    
+
+    ::-webkit-scrollbar-thumb:hover {
+        background-color: var(--color-brand-700);
+    }
+}
+
+/* ---------------------------------------------------------------------------
+ * Variants
+ * ------------------------------------------------------------------------ */
+
+/* True hover capability. Anything gated behind this stays in its expanded,
+ * always-visible form on touch devices, where a hover state can never fire. */
+@custom-variant can-hover (@media (hover: hover) and (pointer: fine));
+
+/* ---------------------------------------------------------------------------
+ * Utilities
+ * ------------------------------------------------------------------------ */
+
+/* Aurora — the ambient glow behind the whole page, and the smaller glows
+ * behind individual cards. Painted as a soft radial gradient rather than a
+ * solid circle under a large blur(): a blur filter has to be re-rasterised
+ * every time its layer moves or resizes, which is ruinous at the 120-130px
+ * radii this background wants. A gradient costs nothing to move. */
+@utility aurora {
+    border-radius: 9999px;
+    background-image: radial-gradient(
+        closest-side,
+        var(--aurora-tint, --alpha(var(--color-brand-500) / 25%)),
+        color-mix(in oklab, var(--aurora-tint, var(--color-brand-500)) 55%, transparent) 55%,
+        transparent 100%
+    );
+}
+
+/* Same paint, kept to the element's own box so it can back a rounded card
+ * instead of reading as a circle. */
+@utility aurora-box {
+    background-image: radial-gradient(
+        closest-side ellipse,
+        var(--aurora-tint, --alpha(var(--color-brand-500) / 25%)),
+        color-mix(in oklab, var(--aurora-tint, var(--color-brand-500)) 50%, transparent) 60%,
+        transparent 100%
+    );
+}
+
+/* Surface — the frosted panel used by every card on the site. */
+@utility surface {
+    background-image: linear-gradient(
+        160deg,
+        --alpha(var(--color-white) / 7%),
+        --alpha(var(--color-white) / 2%) 40%,
+        transparent
+    );
+    background-color: --alpha(var(--color-ink-800) / 55%);
+    border: 1px solid --alpha(var(--color-white) / 8%);
+    backdrop-filter: blur(12px);
+}
+
+/* Gradient text used for section eyebrows and key words. */
+@utility text-gradient {
+    background-image: linear-gradient(
+        100deg,
+        var(--color-white),
+        var(--color-brand-300) 45%,
+        var(--color-accent-300)
+    );
+    background-clip: text;
+    color: transparent;
+}
+
+/* A hairline that fades out at both ends — used under section headings. */
+@utility rule-fade {
+    background-image: linear-gradient(
+        90deg,
+        --alpha(var(--color-brand-400) / 60%),
+        --alpha(var(--color-white) / 10%) 35%,
+        transparent
+    );
+}
+
+/* Animated conic border, applied to featured cards on hover. */
+@utility glow-border {
+    position: relative;
+
+    &::after {
+        content: "";
+        position: absolute;
+        inset: -1px;
+        border-radius: inherit;
+        padding: 1px;
+        background: conic-gradient(
+            from var(--glow-angle, 0deg),
+            transparent 0deg,
+            var(--color-brand-400) 90deg,
+            var(--color-accent-400) 160deg,
+            transparent 240deg
+        );
+        -webkit-mask:
+            linear-gradient(#000 0 0) content-box,
+            linear-gradient(#000 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        opacity: 0;
+        transition: opacity 0.35s ease;
+        pointer-events: none;
+    }
+
+    &:hover::after,
+    &:focus-within::after {
+        opacity: 1;
+    }
+}
+
+/* ---------------------------------------------------------------------------
+ * Scroll reveal — replaces the tailwindcss-intersect / motion plugins.
+ * Elements opt in with data-reveal="<variant>"; an IntersectionObserver in the
+ * layout flips data-revealed once they enter the viewport.
+ * ------------------------------------------------------------------------ */
+[data-reveal] {
+    opacity: 0;
+    transition:
+        opacity 0.7s var(--ease-out-expo),
+        transform 0.7s var(--ease-out-expo),
+        filter 0.7s var(--ease-out-expo);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+}
+
+[data-reveal="up"]     { transform: translateY(28px); }
+[data-reveal="down"]   { transform: translateY(-28px); }
+[data-reveal="left"]   { transform: translateX(-32px); }
+[data-reveal="right"]  { transform: translateX(32px); }
+[data-reveal="blur"]   { transform: translateY(18px); filter: blur(10px); }
+[data-reveal="zoom"]   { transform: scale(0.9); }
+[data-reveal="fade"]   { transform: none; }
+
+[data-reveal][data-revealed] {
+    opacity: 1;
+    transform: none;
+    filter: none;
+}
+
+/* Progressive enhancement: if JS never runs, show everything. */
+.no-js [data-reveal] {
+    opacity: 1;
+    transform: none;
+    filter: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    [data-reveal] {
+        opacity: 1 !important;
+        transform: none !important;
+        filter: none !important;
+        transition: none !important;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+    }
+}
+
+/* Sections that have scrolled well clear of the viewport. Their decorative
+ * animations — the rainbow, the flicker, the blinking carets — are all infinite
+ * and would otherwise keep repainting for the whole time the page is open.
+ * ------------------------------------------------------------------------ */
+[data-offscreen],
+[data-offscreen] *,
+[data-offscreen] *::before,
+[data-offscreen] *::after {
+    animation-play-state: paused !important;
+}
+
+/* ---------------------------------------------------------------------------
+ * Typewriter — the characters are real text in the HTML; each one just holds
+ * at opacity 0 until its turn, so it types itself in without any JavaScript,
+ * and wraps normally at small widths. Set --i per character; override
+ * --type-speed and --type-delay on any ancestor to re-time a run.
+ * ------------------------------------------------------------------------ */
+@keyframes type-char {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.type-char {
+    animation: type-char 1ms steps(1) backwards;
+    animation-delay: calc(var(--i, 0) * var(--type-speed, 42ms) + var(--type-delay, 180ms));
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .type-char {
+        animation: none;
+    }
+}
+
+/* ---------------------------------------------------------------------------
+ * Terminal flourish — the ASCII art in the hero terminal paints itself in one
+ * line at a time and runs a lolcat-style rainbow over it. Every line carries
+ * --i, which both staggers the paint and phase-shifts the gradient per row;
+ * that per-row shift is what gives the rainbow its diagonal drift.
+ * ------------------------------------------------------------------------ */
+@keyframes paint-line {
+    from { opacity: 0; transform: translateX(-0.4em); }
+    to   { opacity: 1; transform: none; }
+}
+
+@keyframes lolcat {
+    from { background-position: 0% 0%; }
+    to   { background-position: -200% 0%; }
+}
+
+@keyframes heartbeat {
+    0%, 42%, 100% { transform: scale(1); }
+    12%           { transform: scale(1.4); }
+    28%           { transform: scale(1.18); }
+}
+
+.paint-line {
+    animation: paint-line 320ms ease-out backwards;
+    animation-delay: calc(var(--i, 0) * var(--paint-speed, 70ms) + var(--paint-delay, 0ms));
+}
+
+.lolcat {
+    background-image: linear-gradient(
+        90deg,
+        #ff7b72, #ffa657, #f2cc60, #7ee787, #56d4dd, #a5a2ff, #ff7b72
+    );
+    background-size: 200% 100%;
+    background-clip: text;
+    color: transparent;
+    animation:
+        paint-line 320ms ease-out backwards,
+        lolcat 5s linear infinite;
+    animation-delay:
+        calc(var(--i, 0) * var(--paint-speed, 70ms) + var(--paint-delay, 0ms)),
+        calc(var(--i, 0) * -0.28s);
+}
+
+.heartbeat {
+    display: inline-block;
+    animation: heartbeat 1.7s ease-in-out infinite;
+    animation-delay: var(--paint-delay, 0ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .paint-line,
+    .lolcat,
+    .heartbeat {
+        animation: none;
+    }
+}
+
+/* Matrix phosphor text. The scramble itself is driven by a small script in the
+ * hero; this is just the colour, glow and flicker it settles into. Characters
+ * keep a fixed 1ch box so swapping glyphs mid-scramble can't shift the line. */
+@keyframes matrix-flicker {
+    0%, 100% { opacity: 1; }
+    92%      { opacity: 1; }
+    94%      { opacity: 0.72; }
+    96%      { opacity: 1; }
+}
+
+.matrix-text {
+    color: #4bff9f;
+    text-shadow:
+        0 0 5px rgba(75, 255, 159, 0.55),
+        0 0 16px rgba(75, 255, 159, 0.28);
+    animation: matrix-flicker 7s linear infinite;
+}
+
+.matrix-text [data-c] {
+    display: inline-block;
+    min-width: 1ch;
+    text-align: center;
+}
+
+/* Mid-scramble characters are dimmer, so the settled ones read as "locked in". */
+.matrix-text [data-c][data-scrambling] {
+    color: #1f8f5a;
+    text-shadow: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .matrix-text {
+        animation: none;
+    }
+}
+
+/* Rotating conic highlight for featured cards. */
+@property --glow-angle {
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+}
+
+@keyframes glow-rotate {
+    to { --glow-angle: 360deg; }
+}
+
+.glow-border:hover::after,
+.glow-border:focus-within::after {
+    animation: glow-rotate 4.5s linear infinite;
 }

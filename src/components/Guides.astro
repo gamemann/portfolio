@@ -1,92 +1,121 @@
 ---
-import Item from "../components/guide/Item.astro"
+import Section from "./ui/Section.astro"
+import Badge from "./ui/Badge.astro"
+import { guideCategories, guides } from "../data/guides"
 ---
 
-<section id="guides">
-    <div class="mx-auto container">
-        <h2 class="text-white text-3xl font-extrabold mb-4">My Popular Guides</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            <Item
-                banner="/images/guide/steam-link-setup.webp"
-                title="How To Setup Steam Link On Raspberry Pi 4"
-                link="https://blog.moddingcommunity.com/how-to-set-up-steam-link-on-a-raspberry-pi/"
-                category="Gaming"
-                source="TMC"
+<Section
+    id="guides"
+    eyebrow="05 — Writing"
+    title="Guides people actually use"
+    lead="Ten-plus years of technical writing, from kernel-level networking to getting a Garry's Mod server online. Filter by topic below."
+>
+    <div
+        data-reveal="up"
+        class="mb-8 flex flex-wrap gap-2"
+        role="group"
+        aria-label="Filter guides by category"
+    >
+        {guideCategories.map((category) => (
+            <button
+                type="button"
+                data-filter={category}
+                aria-pressed={category === "All" ? "true" : "false"}
+                class="rounded-full border border-white/10 bg-white/4 px-4 py-2 text-xs font-semibold text-white/55 transition duration-200 hover:border-white/25 hover:text-white aria-pressed:border-brand-400/40 aria-pressed:bg-brand-500/20 aria-pressed:text-white"
             >
-                How to install and run Steam Link on a Raspberry Pi 4 Model B device.
-            </Item>
-            <Item
-                banner="/images/guide/dynamic-fields-with-formik.png"
-                title="How To Create Forms With Dynamic Fields using React And Formik"
-                link="https://tekworks.net/blog/view/react-form-with-dynamic-fields-and-formik"
-                category="Technology"
-                source="Deaconn"
-            >
-                How to create dynamic fields using React with Formik.
-            </Item>
-            <Item
-                banner="/images/guide/how-to-launch-a-dos-attack-and-drop-it.png"
-                title="How To Launch A DoS Attack & Drop It"
-                link="https://tekworks.net/blog/view/how-to-launch-a-dos-attack-and-drop-it"
-                category="Security"
-                source="Deaconn"
-            >
-                How to launch a DoS attack and drop it using my own open-source tools.
-            </Item>
-            <Item
-                banner="/images/guide/basic-linux-security.jpeg"
-                title="Basic Linux Security"
-                link="https://tekworks.net/blog/view/basic-linux-security"
-                category="Security"
-                source="Deaconn"
-            >
-                How to secure a Linux server with OpenSSH, IPTables, and more.
-            </Item>
-            <Item
-                banner="/images/guide/mtr-traceroute-guide.png"
-                title="MTR/Trace Route Guide"
-                link="https://tekworks.net/blog/view/mtr-and-traceroute-guide"
-                category="Networking"
-                source="Deaconn"
-            >
-                How to perform MTRs and trace routes to diagnose network issues.
-            </Item>
-            <Item
-                banner="/images/guide/how-to-install-rdr2-mods.jpeg"
-                title="How To Install Mods In RDR2"
-                link="https://blog.moddingcommunity.com/how-to-install-mods-in-rdr2/"
-                category="Gaming"
-                source="TMC"
-            >
-                How to install mods in Red Dead Redemption 2 (RDR2) on PC, including instructions on how to use a popular mod loader, Lenny's Mod Loader (LML)!.
-            </Item>
-            <Item
-                banner="/images/guide/how-to-run-steamcmd.png"
-                title="How To Download & Run SteamCMD"
-                link="https://blog.moddingcommunity.com/how-to-download-run-steamcmd/"
-                category="Gaming"
-                source="TMC"
-            >
-                How to download and run SteamCMD on both Linux and Windows.
-            </Item>
-            <Item
-                banner="/images/guide/how-to-setup-l4d2-server-with-mods.jpeg"
-                title="How To Make A Left 4 Dead 2 Server With Mods"
-                link="https://blog.moddingcommunity.com/how-to-make-a-l4d2-server-with-mods/"
-                category="Gaming"
-                source="TMC"
-            >
-                How to create and run a Left 4 Dead 2 server with mods on both Windows and Linux.
-            </Item>
-            <Item
-                banner="/images/guide/how-to-setup-gmod-server-with-mods.png"
-                title="How To Make A Garry's Mod Server & Install Addons"
-                link="https://blog.moddingcommunity.com/how-to-make-a-gmod-server-install-mods-addons/"
-                category="Gaming"
-                source="TMC"
-            >
-                How to make and run a Garry's Mod server with mods (addons) on both Windows and Linux!
-            </Item>
-        </div>
+                {category}
+            </button>
+        ))}
     </div>
-</section>
+
+    <div id="guide-grid" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {guides.map((guide, i) => (
+            <article
+                data-category={guide.category}
+                data-reveal="up"
+                style={`--reveal-delay:${(i % 3) * 90}ms`}
+                class="surface glow-border group relative flex flex-col overflow-hidden rounded-2xl transition duration-300 hover:-translate-y-1.5"
+            >
+                <a
+                    href={guide.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="relative block overflow-hidden"
+                    tabindex="-1"
+                    aria-hidden="true"
+                >
+                    <img
+                        src={guide.banner}
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                        class="h-44 w-full object-cover brightness-[0.7] transition duration-500 group-hover:scale-[1.04] group-hover:brightness-100"
+                    />
+                    <div class="absolute inset-0 bg-linear-to-t from-ink-900 via-ink-900/25 to-transparent"></div>
+                </a>
+
+                <div class="flex grow flex-col p-5">
+                    <div class="flex items-center gap-2">
+                        <Badge tone="accent">{guide.category}</Badge>
+                        <span class="font-mono text-[11px] text-white/30">{guide.source}</span>
+                    </div>
+
+                    <h3 class="mt-3 text-base leading-snug font-bold">
+                        <a
+                            href={guide.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="transition hover:text-brand-300"
+                        >{guide.title}</a>
+                    </h3>
+
+                    <p class="mt-2 grow text-sm leading-relaxed text-white/55">{guide.summary}</p>
+
+                    <a
+                        href={guide.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="mt-5 inline-flex items-center gap-1.5 border-t border-white/8 pt-4 text-sm font-semibold text-white/80 transition hover:text-accent-300"
+                    >
+                        Read
+                        <span class="transition-transform duration-200 group-hover:translate-x-0.5">↗</span>
+                    </a>
+                </div>
+            </article>
+        ))}
+    </div>
+
+    <p id="guide-empty" class="hidden py-10 text-center text-sm text-white/40">
+        Nothing filed under that topic yet.
+    </p>
+</Section>
+
+<script>
+    // Category filter. Plain DOM so the grid stays static HTML and ships no
+    // hydration cost — the buttons just toggle visibility.
+    const buttons = document.querySelectorAll<HTMLButtonElement>("[data-filter]")
+    const cards = document.querySelectorAll<HTMLElement>("#guide-grid [data-category]")
+    const empty = document.getElementById("guide-empty")
+
+    for (const button of buttons) {
+        button.addEventListener("click", () => {
+            const wanted = button.dataset.filter
+
+            for (const other of buttons)
+                other.setAttribute("aria-pressed", String(other === button))
+
+            let shown = 0
+
+            for (const card of cards) {
+                const match = wanted === "All" || card.dataset.category === wanted
+
+                card.classList.toggle("hidden", !match)
+
+                if (match)
+                    shown++
+            }
+
+            empty?.classList.toggle("hidden", shown > 0)
+        })
+    }
+</script>

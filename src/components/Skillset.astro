@@ -1,54 +1,65 @@
 ---
-import SoftwareDeveloperIcon from "../assets/skill/SoftwareDeveloper.svg"
-import WebDeveloperIcon from "../assets/skill/WebDeveloper.svg"
-import NetworkEngineerIcon from "../assets/skill/NetworkEngineer.svg"
-import GameDeveloperIcon from "../assets/skill/GameDeveloper.svg"
-import CustomerServiceIcon from "../assets/skill/CustomerService.svg"
-import TechnicalWriterIcon from "../assets/skill/TechnicalWriter.svg"
+import Section from "./ui/Section.astro"
+import Badge from "./ui/Badge.astro"
+import { skills } from "../data/skills"
 
-import Item from "../components/skill/Item.astro"
+// A trailing card that would otherwise sit alone on its own row spans the full
+// width instead, switching to a side-by-side layout so it doesn't just read as
+// a stretched version of its siblings.
+const orphanIndex = skills.length % 3 === 1 ? skills.length - 1 : -1
 ---
 
-<section id="skillset">
-    <div class="mx-auto container">
-        <h2 class="text-white text-3xl font-extrabold mb-4">My Skillset</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-y-20 gap-x-4 lg:gap-x-40">
-            <Item
-                title="Software Developer"
-                icon={SoftwareDeveloperIcon.src}
-            >
-                With over a decade of experience in software development, I have designed and built a wide range of applications and tools, including automation bots, web scrapers, and custom utilities. My expertise spans multiple programming languages and frameworks, allowing me to develop efficient and scalable solutions.
-            </Item>
-            <Item
-                title="Web Developer"
-                icon={WebDeveloperIcon.src}
-            >
-                I am a seasoned full-stack web developer with over ten years of experience, specializing in modern web technologies. My skill set includes Next.js, Astro, React, TypeScript, Tailwind CSS, PHP, Laravel, Python, and Django. I am passionate about building high-performance, scalable web applications with clean and manageable code.
-            </Item>
-            <Item
-                title="Network Engineer"
-                icon={NetworkEngineerIcon.src}
-            >
-                Combining network engineering and programming expertise across Linux and Windows environments, I have developed high-performance, Linux-based firewalls leveraging <a href="https://www.iovisor.org/technology/xdp" target="_blank">XDP</a> for fast packet processing. My deep understanding of networking includes firewall tools such as IPTables and NFTables, packet flow analysis, tunneling protocols, and advanced traffic management.
-            </Item>
-            <Item
-                title="Game Developer"
-                icon={GameDeveloperIcon.src}
-            >
-                My passion for programming began with game development at the age of 12. Since then, I have developed various game modifications for titles like Counter-Strike and Left 4 Dead and contributed open-source assets for game engines such as <a href="https://godotengine.org/" target="_blank">Godot</a>. I enjoy creating immersive experiences through scripting, asset development, and game mechanics programming.
-            </Item>
-            <Item
-                title="Customer Service"
-                icon={CustomerServiceIcon.src}
-            >
-                With experience as a technical support engineer, I have provided expert assistance to customers through phone, ticketing systems, and live chat. I excel in troubleshooting, resolving technical issues efficiently, and delivering clear, professional communication to ensure customer satisfaction. 
-            </Item>
-            <Item
-                title="Technical Writer"
-                icon={TechnicalWriterIcon.src}
-            >
-                With over a decade of experience in technical writing, I have authored comprehensive guides and knowledge base articles for both corporate environments and personal projects. My expertise spans a wide range of topics, including gaming, modding, networking, and programming. I excel at breaking down complex concepts into clear, accessible documentation. You can find examples of my publicly available guides at the bottom of this portfolio.
-            </Item>
-        </div>
+<Section
+    id="skillset"
+    eyebrow="02 — What I do"
+    title="Seven disciplines, one toolbox"
+    lead="I've never been able to stay in a single lane for long, and the overlap is the point — the firewall work informs the backend work, and the support work informs all of it."
+>
+    <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        {skills.map((skill, i) => {
+            const wide = i === orphanIndex
+
+            return (
+                <article
+                    data-reveal="up"
+                    style={`--reveal-delay:${(i % 3) * 90}ms`}
+                    class:list={[
+                        "surface glow-border group relative flex flex-col rounded-2xl p-6 transition duration-300 hover:-translate-y-1.5",
+                        wide && "xl:col-span-3 xl:flex-row xl:items-start xl:gap-7"
+                    ]}
+                >
+                    <div
+                        class:list={[
+                            "mb-5 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-brand-500/30 to-accent-500/15 ring-1 ring-white/10 transition duration-300 group-hover:from-brand-500/45 group-hover:to-accent-500/25",
+                            wide && "xl:mb-0"
+                        ]}
+                    >
+                        <img
+                            src={skill.icon}
+                            alt=""
+                            width="24"
+                            height="24"
+                            class="h-6 w-6 opacity-85 transition duration-300 group-hover:scale-110 group-hover:opacity-100"
+                        />
+                    </div>
+
+                    <div class="flex grow flex-col">
+                        <h3 class="text-lg font-bold">{skill.title}</h3>
+
+                        <p
+                            class:list={[
+                                "mt-3 grow text-sm leading-relaxed text-white/58 [&_a]:text-link [&_a]:underline [&_a]:decoration-brand-400/40 [&_a]:underline-offset-4 [&_a:hover]:text-link-hover",
+                                wide && "xl:max-w-3xl"
+                            ]}
+                            set:html={skill.body}
+                        />
+
+                        <div class="mt-5 flex flex-wrap gap-1.5">
+                            {skill.tags.map((tag) => <Badge>{tag}</Badge>)}
+                        </div>
+                    </div>
+                </article>
+            )
+        })}
     </div>
-</section>
+</Section>
