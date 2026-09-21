@@ -71,8 +71,8 @@ export const timeline: readonly TimelineEntry[] = [
     {
         when: "Age 11",
         title: "First lines of code",
-        body: "Started out writing and editing existing game modifications for the game Left 4 Dead using SourcePawn (for SourceMod).",
-        highlight: "My first project was a small mod for Left 4 Dead 2 servers built with SourceMod/SourcePawn.",
+        body: "Started out writing and editing existing game modifications for the game Left 4 Dead 2.",
+        highlight: "My first project was a small mod for Left 4 Dead 2 servers built with SourceMod/SourcePawn in 2009/2010.",
         highlightLink: "https://forums.alliedmods.net/showthread.php?p=1066227"
     },
     {
