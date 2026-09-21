@@ -44,6 +44,35 @@ import { facts, timeline } from "../data/site"
                         <p class="font-mono text-[11px] tracking-widest text-accent-300 uppercase">{entry.when}</p>
                         <h3 class="mt-1 text-base font-bold">{entry.title}</h3>
                         <p class="mt-1 text-sm text-white/55">{entry.body}</p>
+                        {entry.highlight && (
+                            <div class="mt-3 rounded-lg border border-white/8 border-l-2 border-l-brand-400/70 bg-white/[0.03] px-3.5 py-2.5">
+                                {entry.highlightLink ? (
+                                    <a
+                                        href={entry.highlightLink}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="group flex items-start gap-2 text-sm text-white/70 transition hover:text-link-hover"
+                                    >
+                                        <span>{entry.highlight}</span>
+                                        <svg
+                                            class="mt-0.5 h-3.5 w-3.5 shrink-0 text-brand-300 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="2"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            aria-hidden="true"
+                                        >
+                                            <path d="M7 17 17 7" />
+                                            <path d="M7 7h10v10" />
+                                        </svg>
+                                    </a>
+                                ) : (
+                                    <p class="text-sm text-white/70">{entry.highlight}</p>
+                                )}
+                            </div>
+                        )}
                     </li>
                 ))}
             </ol>

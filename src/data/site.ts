@@ -57,11 +57,23 @@ export const facts = [
     { label: "Status", value: "Not seeking work, but always open to connecting :)" }
 ] as const
 
-export const timeline = [
+export type TimelineEntry = {
+    when: string
+    title: string
+    body: string
+    /** Optional callout rendered as a small block beneath the entry body. */
+    highlight?: string
+    /** URL the highlight block links to. */
+    highlightLink?: string
+}
+
+export const timeline: readonly TimelineEntry[] = [
     {
         when: "Age 11",
         title: "First lines of code",
-        body: "Started out writing and editing existing game modifications for the game Left 4 Dead using SourcePawn (for SourceMod)."
+        body: "Started out writing and editing existing game modifications for the game Left 4 Dead using SourcePawn (for SourceMod).",
+        highlight: "My first project was a small mod for Left 4 Dead 2 servers built with SourceMod/SourcePawn.",
+        highlightLink: "https://forums.alliedmods.net/showthread.php?p=1066227"
     },
     {
         when: "Age 13",
@@ -78,4 +90,4 @@ export const timeline = [
         title: "TekWorks & The Modding Community",
         body: "Building a software publisher and a modding community with a focus on open source and community-driven development. Also creating our own gaming platform underneath Godot!"
     }
-] as const
+]
