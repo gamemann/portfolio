@@ -69,6 +69,19 @@ export const projects: Project[] = [
             "A collection of high-performance tools for generating and sending network packets, used for two things: penetration testing — simulating attacks such as Denial of Service to assess network resilience — and network monitoring through traffic analysis and inspection."
     },
     {
+        title: "Zee's Games",
+        banner: "/images/project/zees-games.jpg",
+        link: "https://github.com/zees-games",
+        sourceLink: "https://github.com/zees-games",
+        openSource: true,
+        maintained: true,
+        category: "Gaming",
+        role: "Author",
+        tags: ["GDScript", "Godot", "Dot", "Game Development"],
+        summary:
+            "A collection of open source games I'm working on for @modcommunity's gaming platform built on-top of Godot Engine."
+    },
+    {
         title: "Best Mods",
         banner: "/images/project/bestmods.png",
         link: "https://bestmods.org",
