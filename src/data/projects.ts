@@ -71,7 +71,7 @@ export const projects: Project[] = [
     {
         title: "Zee's Games",
         banner: "/images/project/zees-games.jpg",
-        link: "https://github.com/zees-games",
+        link: "https://zeesgames.com",
         sourceLink: "https://github.com/zees-games",
         openSource: true,
         maintained: true,
