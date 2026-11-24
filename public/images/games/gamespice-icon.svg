@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>GameSpice</title>
+  <defs>
+    <linearGradient id="gs-potion" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffb02e"/>
+      <stop offset="0.5" stop-color="#f2542d"/>
+      <stop offset="1" stop-color="#b8193c"/>
+    </linearGradient>
+    <clipPath id="gs-body"><path d="M222 92V178C150 206 112 264 112 332A144 144 0 0 0 400 332C400 264 362 206 290 178V92Z"/></clipPath>
+  </defs>
+  <g transform="translate(0 4)">
+  <g data-sparks="">
+    <path fill="#ffc83d" d="M410 96l8 20 20 8-20 8-8 20-8-20-20-8 20-8z"/>
+    <path fill="#ff7a2d" d="M96 150l6 15 15 6-15 6-6 15-6-15-15-6 15-6z"/>
+    <circle cx="370" cy="40" r="8" fill="#ffc83d"/><circle cx="140" cy="76" r="7" fill="#ffc83d"/><circle cx="452" cy="196" r="6" fill="#ff7a2d"/><circle cx="60" cy="240" r="6" fill="#ffc83d"/>
+  </g>
+  <g data-bottle="">
+    <path d="M222 92V178C150 206 112 264 112 332A144 144 0 0 0 400 332C400 264 362 206 290 178V92Z" fill="none" stroke="#2b1410" stroke-width="26" stroke-linejoin="round"/>
+    <path d="M222 92V178C150 206 112 264 112 332A144 144 0 0 0 400 332C400 264 362 206 290 178V92Z" fill="#e9f5ff" fill-opacity="0.92"/>
+    <path d="M90 270C130 250 160 288 200 272C240 256 270 288 310 272C350 256 380 282 420 268V480H90Z" fill="url(#gs-potion)" clip-path="url(#gs-body)"/>
+    <circle cx="352" cy="420" r="11" fill="#fff" fill-opacity="0.55"/><circle cx="318" cy="448" r="7" fill="#fff" fill-opacity="0.55"/><circle cx="146" cy="400" r="8" fill="#fff" fill-opacity="0.55"/>
+    <path d="M222 92V178C150 206 112 264 112 332A144 144 0 0 0 400 332C400 264 362 206 290 178V92Z" fill="none" stroke="#fff6e6" stroke-width="10" stroke-linejoin="round"/>
+    <path d="M150 304C156 272 176 248 204 234" fill="none" stroke="#fff" stroke-opacity="0.8" stroke-width="11" stroke-linecap="round"/>
+    <rect x="174" y="288" width="164" height="94" rx="16" fill="#fff6e6" stroke="#2b1410" stroke-width="8"/>
+    <path d="M247 321A22 22 0 1 0 248 337H228M305 319C299 308 270 307 268 321C266 335 305 331 303 346C301 360 272 359 266 348" fill="none" stroke="#7a1f14" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="204" y="34" width="104" height="60" rx="16" fill="#f0a62b" stroke="#2b1410" stroke-width="12"/>
+    <path d="M222 52h68" stroke="#ffd37a" stroke-width="8" stroke-linecap="round"/>
+  </g>
+  </g>
+</svg>

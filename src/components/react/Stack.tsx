@@ -153,7 +153,7 @@ export default function Stack({
             <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
                 <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
                     {TIERS.map((t) => (
-                        <span key={t.label} className="flex items-center gap-2 text-xs text-white/55">
+                        <span key={t.label} className="flex items-center gap-2 text-xs text-white/65">
                             <span className={`h-2 w-2 rounded-full ${t.dot}`} />
                             {t.label}
                         </span>
@@ -214,7 +214,7 @@ export default function Stack({
                             {RINGS.map((ring) => (
                                 <div
                                     key={`guide-${ring.radius}`}
-                                    className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/6"
+                                    className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-brand-300/12"
                                     style={{ width: ring.radius * 2, height: ring.radius * 2 }}
                                 />
                             ))}
@@ -239,8 +239,8 @@ export default function Stack({
                                         <p className="font-display text-3xl font-extrabold text-white">
                                             {items.length}
                                         </p>
-                                        <p className="mt-1 text-xs text-white/45">technologies</p>
-                                        <p className="mt-2 font-mono text-[10px] tracking-widest text-white/25 uppercase">
+                                        <p className="mt-1 text-xs text-white/60">technologies</p>
+                                        <p className="mt-2 font-mono text-[10px] tracking-widest text-white/45 uppercase">
                                             hover to inspect
                                         </p>
                                     </>
@@ -322,7 +322,7 @@ export default function Stack({
 
                         return (
                             <div key={group}>
-                                <h3 className="mb-4 font-mono text-xs tracking-[0.22em] text-white/35 uppercase">
+                                <h3 className="mb-4 font-mono text-xs tracking-[0.22em] text-white/55 uppercase">
                                     {group}
                                 </h3>
                                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">

@@ -55,7 +55,7 @@ export default function EmailButton({ email64 }: { email64: string }) {
             <button
                 type="button"
                 onClick={open}
-                className="group inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-linear-to-r from-brand-600 to-brand-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-brand-600/25 transition duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand-500/35"
+                className="group inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl btn-sheen px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-brand-600/30 ring-1 ring-white/15 ring-inset hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand-500/45"
             >
                 <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                     <rect x="2" y="4" width="20" height="16" rx="2" />

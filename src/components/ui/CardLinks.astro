@@ -1,0 +1,49 @@
+---
+/**
+ * The Website / Source pair every project and game card ends with. A project
+ * whose only home is its repository gets the Source button alone.
+ */
+interface Props {
+    title: string
+    link: string
+    sourceLink?: string
+    /** Label for the primary button. */
+    label?: string
+    size?: "sm" | "md"
+    class?: string
+}
+
+const { title, link, sourceLink, label = "Website", size = "md", class: className = "" } = Astro.props
+
+const showSite = link !== sourceLink
+const pad = size === "sm" ? "px-3 py-1.5 text-xs" : "px-3.5 py-2 text-[13px]"
+const base = `inline-flex items-center gap-1.5 rounded-lg font-semibold leading-none transition duration-200 ${pad}`
+---
+
+<div class={`relative z-2 flex flex-wrap items-center gap-2 ${className}`}>
+    {showSite && (
+        <a
+            href={link}
+            target="_blank"
+            rel="noopener noreferrer"
+            class={`${base} card-cta border border-white/15 bg-white/10 text-white hover:-translate-y-0.5 hover:border-accent-400/60 hover:bg-accent-500/20`}
+        >
+            {label}<span class="sr-only">: {title}</span>
+            <span aria-hidden="true">↗</span>
+        </a>
+    )}
+
+    {sourceLink && (
+        <a
+            href={sourceLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            class={`${base} border border-white/10 text-white/70 hover:-translate-y-0.5 hover:border-mint-400/50 hover:text-mint-400`}
+        >
+            <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="currentColor" aria-hidden="true">
+                <path d="M12 .5C5.73.5.9 5.33.9 11.6c0 4.9 3.17 9.06 7.57 10.53.55.1.76-.24.76-.53v-1.9c-3.08.67-3.73-1.32-3.73-1.32-.5-1.29-1.23-1.63-1.23-1.63-1-.69.08-.67.08-.67 1.11.08 1.7 1.15 1.7 1.15.99 1.7 2.59 1.21 3.22.93.1-.72.39-1.21.7-1.49-2.46-.28-5.05-1.24-5.05-5.5 0-1.22.43-2.21 1.15-2.99-.12-.28-.5-1.42.11-2.95 0 0 .94-.3 3.07 1.14a10.6 10.6 0 0 1 5.6 0c2.13-1.44 3.06-1.14 3.06-1.14.61 1.53.23 2.67.12 2.95.72.78 1.15 1.77 1.15 2.99 0 4.27-2.6 5.21-5.07 5.49.4.34.76 1.02.76 2.06v3.06c0 .3.2.64.77.53 4.4-1.47 7.56-5.63 7.56-10.53C23.1 5.33 18.27.5 12 .5Z" />
+            </svg>
+            Source<span class="sr-only">: {title}</span>
+        </a>
+    )}
+</div>

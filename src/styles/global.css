@@ -25,6 +25,14 @@
     --color-accent-400: #22d3ee;
     --color-accent-500: #06b6d4;
 
+    /* Nova — a warm magenta that only shows up in glows and the odd highlight,
+       so the indigo/cyan pair has something to play against. */
+    --color-nova-300: #f9a8d4;
+    --color-nova-400: #f472b6;
+    --color-nova-500: #d946ef;
+
+    --color-star-300: #fde68a;
+
     --color-mint-400: #34d399;
     --color-link: #aca9da;
     --color-link-hover: #d7d5f2;
@@ -39,6 +47,8 @@
     --animate-pulse-ring: pulse-ring 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
     --animate-shimmer: shimmer 2.6s linear infinite;
     --animate-drift: drift 26s ease-in-out infinite alternate;
+    --animate-twinkle: twinkle 5s ease-in-out infinite alternate;
+    --animate-spin-slow: orbit-spin 60s linear infinite;
 
     --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 
@@ -63,6 +73,27 @@
 @keyframes drift {
     0%   { transform: translate3d(0, 0, 0); }
     100% { transform: translate3d(5%, -7%, 0); }
+}
+
+@keyframes twinkle {
+    0%   { opacity: 0.35; }
+    100% { opacity: 1; }
+}
+
+@keyframes shooting-star {
+    0%       { transform: translate3d(0, 0, 0) rotate(-24deg) scaleX(0.2); opacity: 0; }
+    3%       { opacity: 1; }
+    11%      { transform: translate3d(-46vw, 20.5vw, 0) rotate(-24deg) scaleX(1); opacity: 0; }
+    100%     { transform: translate3d(-46vw, 20.5vw, 0) rotate(-24deg) scaleX(1); opacity: 0; }
+}
+
+@keyframes star-parallax {
+    to { transform: translate3d(0, var(--parallax, -12vh), 0); }
+}
+
+@keyframes sheen {
+    0%   { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
 }
 
 @keyframes orbit-spin {
@@ -200,10 +231,12 @@
     background-image: linear-gradient(
         100deg,
         var(--color-white),
-        var(--color-brand-300) 45%,
-        var(--color-accent-300)
+        var(--color-brand-300) 40%,
+        var(--color-accent-300) 75%,
+        var(--color-nova-300)
     );
     background-clip: text;
+    -webkit-background-clip: text;
     color: transparent;
 }
 
@@ -447,4 +480,154 @@
 .glow-border:hover::after,
 .glow-border:focus-within::after {
     animation: glow-rotate 4.5s linear infinite;
+}
+
+/* ---------------------------------------------------------------------------
+ * Deep space — the starfield, shooting star and planet that sit behind the
+ * page. Stars are box-shadows on three 1px elements (generated at build time
+ * in the layout), so the whole field is three compositor layers and no DOM.
+ * ------------------------------------------------------------------------ */
+.stars {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 9999px;
+    background: transparent;
+    will-change: opacity;
+}
+
+/* Where scroll-driven animation exists, the layers slide at different rates
+ * for a little depth; everywhere else they simply twinkle in place. */
+@supports (animation-timeline: scroll()) {
+    @media (prefers-reduced-motion: no-preference) {
+        .stars-parallax {
+            animation: star-parallax linear both;
+            animation-timeline: scroll(root);
+        }
+    }
+}
+
+.shooting-star {
+    position: absolute;
+    top: 14%;
+    right: -4%;
+    width: 9rem;
+    height: 1.5px;
+    border-radius: 9999px;
+    background-image: linear-gradient(90deg, #fff, --alpha(var(--color-accent-300) / 60%) 30%, transparent);
+    filter: drop-shadow(0 0 6px --alpha(var(--color-accent-300) / 80%));
+    transform-origin: left center;
+    opacity: 0;
+    animation: shooting-star 11s ease-out 2.5s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .shooting-star {
+        display: none;
+    }
+}
+
+/* A lit sphere: one radial gradient for the day side, an inset shadow for the
+ * terminator, and a rim glow. */
+@utility planet {
+    border-radius: 9999px;
+    background-image:
+        radial-gradient(circle at 30% 26%, --alpha(var(--color-white) / 55%), transparent 22%),
+        radial-gradient(circle at 34% 30%, var(--color-brand-400), var(--color-brand-700) 48%, var(--color-ink-900) 78%);
+    box-shadow:
+        inset -1.4em -1.2em 2.6em --alpha(var(--color-ink-950) / 90%),
+        0 0 3.5em --alpha(var(--color-brand-500) / 45%),
+        0 0 9em --alpha(var(--color-accent-500) / 18%);
+}
+
+/* ---------------------------------------------------------------------------
+ * Section furniture
+ * ------------------------------------------------------------------------ */
+
+/* The seam between two sections: a hairline that brightens toward a single
+ * four-point star in the middle. */
+.section-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--color-accent-300);
+
+    &::before,
+    &::after {
+        content: "";
+        height: 1px;
+        flex: 1;
+    }
+
+    &::before {
+        background-image: linear-gradient(90deg, transparent, --alpha(var(--color-brand-400) / 55%));
+    }
+
+    &::after {
+        background-image: linear-gradient(90deg, --alpha(var(--color-accent-400) / 55%), transparent);
+    }
+}
+
+/* The oversized outlined numeral behind each section heading. */
+@utility ghost-numeral {
+    font-family: var(--font-display);
+    font-weight: 800;
+    line-height: 0.8;
+    letter-spacing: -0.04em;
+    color: transparent;
+    -webkit-text-stroke: 1px --alpha(var(--color-brand-300) / 38%);
+    background-image: linear-gradient(180deg, --alpha(var(--color-brand-400) / 24%), transparent 85%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    user-select: none;
+}
+
+/* ---------------------------------------------------------------------------
+ * Spotlight — a soft light that follows the pointer across a card. A tiny
+ * delegated listener in the layout writes --mx/--my; without it (touch, no JS)
+ * the highlight simply never fades in.
+ * ------------------------------------------------------------------------ */
+@utility spot {
+    position: relative;
+
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        border-radius: inherit;
+        background-image: radial-gradient(
+            22rem circle at var(--mx, 50%) var(--my, 0%),
+            color-mix(in oklab, var(--spot-tint, var(--color-brand-400)) 16%, transparent),
+            transparent 65%
+        );
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        pointer-events: none;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+        &:hover::before {
+            opacity: 1;
+        }
+    }
+}
+
+/* Primary call-to-action sheen. */
+@utility btn-sheen {
+    background-image: linear-gradient(
+        100deg,
+        var(--color-brand-600),
+        var(--color-brand-500) 35%,
+        var(--color-accent-500) 50%,
+        var(--color-brand-500) 65%,
+        var(--color-brand-600)
+    );
+    background-size: 200% 100%;
+    background-position: 0% 50%;
+    transition: background-position 0.6s var(--ease-out-expo), transform 0.2s, box-shadow 0.2s;
+
+    &:hover {
+        background-position: 100% 50%;
+    }
 }

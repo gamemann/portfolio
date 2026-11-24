@@ -9,7 +9,7 @@ import { facts, timeline } from "../data/site"
     title="A decade of building, breaking, and documenting"
 >
     <div class="grid gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
-        <div class="space-y-5 text-base leading-relaxed text-white/65">
+        <div class="space-y-5 text-base leading-relaxed text-white/72 sm:text-[17px]">
             <p data-reveal="blur">
                 I'm a DevOps engineer with over a decade of hands-on experience across
                 development, automation, and system administration. It started at
@@ -33,17 +33,17 @@ import { facts, timeline } from "../data/site"
             </p>
 
             <!-- Timeline -->
-            <ol class="mt-10 space-y-0 border-l border-white/10 pl-6">
+            <ol class="mt-10 space-y-0 border-l border-brand-400/25 pl-6">
                 {timeline.map((entry, i) => (
                     <li
                         data-reveal="left"
                         style={`--reveal-delay:${i * 90}ms`}
                         class="relative pb-8 last:pb-0"
                     >
-                        <span class="absolute top-1.5 -left-[1.8125rem] h-2.5 w-2.5 rounded-full border-2 border-ink-950 bg-brand-400"></span>
+                        <span class="absolute top-1.5 -left-[1.8125rem] h-2.5 w-2.5 rounded-full border-2 border-ink-950 bg-accent-300 shadow-[0_0_10px_2px_rgba(125,211,252,0.6)]"></span>
                         <p class="font-mono text-[11px] tracking-widest text-accent-300 uppercase">{entry.when}</p>
                         <h3 class="mt-1 text-base font-bold">{entry.title}</h3>
-                        <p class="mt-1 text-sm text-white/55">{entry.body}</p>
+                        <p class="mt-1 text-sm text-white/65">{entry.body}</p>
                         {entry.highlight && (
                             <div class="mt-3 rounded-lg border border-white/8 border-l-2 border-l-brand-400/70 bg-white/[0.03] px-3.5 py-2.5">
                                 {entry.highlightLink ? (
@@ -80,19 +80,19 @@ import { facts, timeline } from "../data/site"
 
         <!-- Fact panel -->
         <aside data-reveal="right" class="lg:sticky lg:top-28 lg:self-start">
-            <div class="surface rounded-2xl p-6 sm:p-7">
-                <h3 class="font-mono text-xs tracking-[0.22em] text-white/35 uppercase">At a glance</h3>
+            <div class="surface spot rounded-2xl p-6 ring-1 ring-brand-400/10 sm:p-7">
+                <h3 class="font-mono text-xs tracking-[0.22em] text-white/55 uppercase">At a glance</h3>
                 <dl class="mt-5 space-y-5">
                     {facts.map((fact) => (
                         <div>
                             <dt class="text-[11px] font-semibold tracking-wider text-brand-300 uppercase">{fact.label}</dt>
-                            <dd class="mt-1 text-sm text-white/70">{fact.value}</dd>
+                            <dd class="mt-1 text-sm text-white/80">{fact.value}</dd>
                         </div>
                     ))}
                 </dl>
 
                 <div class="mt-7 border-t border-white/8 pt-5">
-                    <p class="text-sm text-white/50">
+                    <p class="text-sm text-white/60">
                         Everything on this page is built with Astro, React, and Tailwind —
                         and the source is public.
                     </p>

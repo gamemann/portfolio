@@ -133,7 +133,7 @@ export default function Nav({ items }: { items: readonly NavItem[] }) {
                     {pill && (
                         <span
                             aria-hidden="true"
-                            className="pointer-events-none absolute top-1.5 bottom-1.5 rounded-xl bg-linear-to-b from-brand-500/35 to-brand-600/25 ring-1 ring-brand-400/30 transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                            className="pointer-events-none absolute top-1.5 bottom-1.5 rounded-xl bg-linear-to-b from-brand-500/45 to-brand-600/30 shadow-[0_0_18px_-4px] shadow-brand-500/80 ring-1 ring-brand-400/40 transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]"
                             style={{ left: pill.left, width: pill.width }}
                         />
                     )}
@@ -151,7 +151,7 @@ export default function Nav({ items }: { items: readonly NavItem[] }) {
                                 onClick={goto(item.sec)}
                                 aria-current={isActive ? "true" : undefined}
                                 className={`relative z-10 rounded-xl px-3 py-2 text-[13px] font-medium whitespace-nowrap transition-colors duration-200 sm:px-4 sm:text-sm ${
-                                    isActive ? "text-white" : "text-white/55 hover:text-white/90"
+                                    isActive ? "text-white" : "text-white/65 hover:text-white"
                                 }`}
                             >
                                 {item.title}

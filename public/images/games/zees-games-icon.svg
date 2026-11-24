@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#10142b"/><stop offset="1" stop-color="#05060f"/></linearGradient>
+    <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9b6bff" stop-opacity="0"/><stop offset="1" stop-color="#9b6bff" stop-opacity=".55"/></linearGradient>
+    <filter id="glow" filterUnits="userSpaceOnUse" x="0" y="0" width="64" height="64"><feGaussianBlur stdDeviation="2.2"/></filter>
+    <clipPath id="sq"><rect width="64" height="64" rx="14"/></clipPath>
+  </defs>
+  <g clip-path="url(#sq)">
+    <rect width="64" height="64" fill="url(#bg)"/>
+    <g stroke="url(#floor)" stroke-width=".8" fill="none">
+      <path d="M0 50H64M0 55.5H64M0 62H64"/>
+      <path d="M32 44L-8 64M32 44L12 64M32 44L32 64M32 44L52 64M32 44L72 64"/>
+    </g>
+  </g>
+  <rect x=".5" y=".5" width="63" height="63" rx="13.5" fill="none" stroke="#232a52"/>
+  <g transform="translate(0 0) scale(1)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M16 18H43L17 46H44" stroke="#2ee6ff" stroke-width="9" opacity=".75" filter="url(#glow)"/>
+    <path d="M16 18H43L17 46H44" stroke="#2ee6ff" stroke-width="5.5"/>
+    <path d="M16 18H43L17 46H44" stroke="#d6fcff" stroke-width="1.6"/>
+    <path d="M52.5 10L50 17.5" stroke="#ffad33" stroke-width="6" opacity=".75" filter="url(#glow)"/>
+    <path d="M52.5 10L50 17.5" stroke="#ffad33" stroke-width="4"/>
+  </g>
+</svg>

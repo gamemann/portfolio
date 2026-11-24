@@ -1,0 +1,149 @@
+---
+import CardLinks from "../ui/CardLinks.astro"
+import type { Game } from "../../data/games"
+
+interface Props {
+    game: Game
+    delay?: number
+}
+
+const { game, delay = 0 } = Astro.props
+
+const domain = game.link.replace(/^https:\/\//, "")
+const tint = `--tint-a:${game.hues[0]};--tint-b:${game.hues[1]};--spot-tint:${game.hues[0]}`
+const fallback = `background-image:linear-gradient(135deg,${game.hues[1]},#0a0819 55%,${game.hues[0]})`
+---
+
+{game.featured ? (
+    /* Standalone-domain games: full banner, tinted halo, big type. */
+    <article
+        data-reveal="zoom"
+        style={`--reveal-delay:${delay}ms;${tint}`}
+        class="game-card surface spot group relative flex h-full flex-col overflow-hidden rounded-2xl transition duration-300 hover:-translate-y-1.5"
+    >
+        <!-- Tinted top edge -->
+        <div class="absolute inset-x-0 top-0 z-10 h-0.5" style={`background-image:linear-gradient(90deg,transparent,${game.hues[0]},transparent)`}></div>
+
+        <a
+            href={game.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="relative block aspect-[1200/630] overflow-hidden"
+            style={fallback}
+            tabindex="-1"
+            aria-hidden="true"
+        >
+            <img
+                src={game.banner}
+                alt=""
+                width="1200"
+                height="630"
+                loading="lazy"
+                decoding="async"
+                class="h-full w-full object-cover transition duration-700 ease-out-expo group-hover:scale-[1.04]"
+            />
+            <div class="absolute inset-0 bg-linear-to-t from-ink-900/85 via-transparent to-transparent"></div>
+        </a>
+
+        <div class="flex grow flex-col p-5 sm:p-6">
+            <div class="flex items-start gap-4">
+                <img
+                    src={game.icon}
+                    alt=""
+                    width="52"
+                    height="52"
+                    loading="lazy"
+                    class="h-13 w-13 shrink-0 rounded-xl shadow-lg shadow-black/50 ring-1 ring-white/15"
+                />
+                <div class="min-w-0">
+                    <h3 class="text-2xl leading-tight font-bold">
+                        <a href={game.link} target="_blank" rel="noopener noreferrer" class="transition hover:text-[var(--tint-a)]">
+                            {game.title}
+                        </a>
+                    </h3>
+                    <p class="mt-1 flex flex-wrap items-center gap-x-2 font-mono text-xs">
+                        <span style={`color:${game.hues[0]}`}>{domain}</span>
+                        <span class="text-white/25" aria-hidden="true">/</span>
+                        <span class="text-white/55">{game.genre}</span>
+                    </p>
+                </div>
+            </div>
+
+            <p class="mt-4 grow text-[15px] leading-relaxed text-white/68">{game.summary}</p>
+
+            <CardLinks
+                title={game.title}
+                link={game.link}
+                sourceLink={game.sourceLink}
+                label="Play"
+                class="mt-5 border-t border-white/8 pt-5"
+            />
+        </div>
+    </article>
+) : (
+    /* zeesgames.com games: the same card at a smaller scale. */
+    <article
+        data-reveal="up"
+        style={`--reveal-delay:${delay}ms;${tint}`}
+        class="game-card surface spot group relative flex h-full flex-col overflow-hidden rounded-2xl transition duration-300 hover:-translate-y-1"
+    >
+        <a
+            href={game.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="relative block aspect-[1200/630] shrink-0 overflow-hidden"
+            style={fallback}
+            tabindex="-1"
+            aria-hidden="true"
+        >
+            <img
+                src={game.banner}
+                alt=""
+                width="1200"
+                height="630"
+                loading="lazy"
+                decoding="async"
+                class="h-full w-full object-cover transition duration-700 ease-out-expo group-hover:scale-[1.05]"
+            />
+            <div class="absolute inset-0 bg-linear-to-t from-ink-900/70 via-transparent to-transparent"></div>
+        </a>
+
+        <div class="flex min-w-0 grow flex-col p-4 sm:p-5">
+            <div class="flex items-center gap-2.5">
+                <img src={game.icon} alt="" width="24" height="24" loading="lazy" class="h-6 w-6 shrink-0 rounded-md ring-1 ring-white/15" />
+                <h3 class="truncate text-base font-bold sm:text-lg">
+                    <a href={game.link} target="_blank" rel="noopener noreferrer" class="transition hover:text-[var(--tint-a)]">
+                        {game.title}
+                    </a>
+                </h3>
+            </div>
+
+            <p class="mt-1.5 font-mono text-[11px] text-white/50">{game.genre}</p>
+
+            <p class="mt-2 grow text-sm leading-relaxed text-white/65">{game.summary}</p>
+
+            <CardLinks title={game.title} link={game.link} sourceLink={game.sourceLink} label="Play" size="sm" class="mt-3.5" />
+        </div>
+    </article>
+)}
+
+<style>
+    /* Hover lights the card in the game's own colours. */
+    .game-card:hover,
+    .game-card:focus-within {
+        box-shadow:
+            0 0 0 1px color-mix(in oklab, var(--tint-a) 50%, transparent),
+            0 18px 50px -18px color-mix(in oklab, var(--tint-a) 55%, transparent),
+            0 30px 80px -30px color-mix(in oklab, var(--tint-b) 65%, transparent);
+    }
+
+    .game-card :global(.card-cta) {
+        border-color: color-mix(in oklab, var(--tint-a) 45%, transparent);
+        background-color: color-mix(in oklab, var(--tint-a) 16%, transparent);
+    }
+
+    .game-card :global(.card-cta:hover) {
+        border-color: var(--tint-a);
+        background-color: color-mix(in oklab, var(--tint-a) 30%, transparent);
+    }
+</style>

@@ -11,17 +11,17 @@ const rest = projects.filter((p) => !p.featured)
     id="projects"
     eyebrow="04 — Selected work"
     title="Things I've built"
-    lead="A publisher, a modding platform, and a handful of tools that push packets faster than the kernel network stack normally allows."
+    lead="A publisher, a modding community, a gaming platform and the games on it, plus a handful of tools that push packets faster than the kernel network stack normally allows."
 >
-    <div class="grid gap-4 lg:grid-cols-2">
+    <div class="grid gap-5 md:grid-cols-2">
         {featured.map((project, i) => (
-            <Card project={project} featured={true} delay={i * 120} />
+            <Card project={project} featured={true} delay={(i % 2) * 120} />
         ))}
     </div>
 
-    <div class="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <div class="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {rest.map((project, i) => (
-            <Card project={project} delay={(i % 4) * 80} />
+            <Card project={project} delay={(i % 3) * 80} />
         ))}
     </div>
 </Section>

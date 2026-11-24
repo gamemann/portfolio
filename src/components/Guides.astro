@@ -6,7 +6,7 @@ import { guideCategories, guides } from "../data/guides"
 
 <Section
     id="guides"
-    eyebrow="05 — Writing"
+    eyebrow="06 — Writing"
     title="Guides people actually use"
     lead="Ten-plus years of technical writing, from kernel-level networking to getting a Garry's Mod server online. Filter by topic below."
 >
@@ -21,7 +21,7 @@ import { guideCategories, guides } from "../data/guides"
                 type="button"
                 data-filter={category}
                 aria-pressed={category === "All" ? "true" : "false"}
-                class="rounded-full border border-white/10 bg-white/4 px-4 py-2 text-xs font-semibold text-white/55 transition duration-200 hover:border-white/25 hover:text-white aria-pressed:border-brand-400/40 aria-pressed:bg-brand-500/20 aria-pressed:text-white"
+                class="cursor-pointer rounded-full border border-white/10 bg-white/4 px-4 py-2 text-xs font-semibold text-white/65 transition duration-200 hover:border-white/25 hover:text-white aria-pressed:border-brand-400/60 aria-pressed:bg-brand-500/25 aria-pressed:text-white aria-pressed:shadow-[0_0_20px_-4px] aria-pressed:shadow-brand-500/70"
             >
                 {category}
             </button>
@@ -34,7 +34,7 @@ import { guideCategories, guides } from "../data/guides"
                 data-category={guide.category}
                 data-reveal="up"
                 style={`--reveal-delay:${(i % 3) * 90}ms`}
-                class="surface glow-border group relative flex flex-col overflow-hidden rounded-2xl transition duration-300 hover:-translate-y-1.5"
+                class="surface spot glow-border group flex flex-col overflow-hidden rounded-2xl transition duration-300 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-brand-600/20"
             >
                 <a
                     href={guide.link}
@@ -57,7 +57,7 @@ import { guideCategories, guides } from "../data/guides"
                 <div class="flex grow flex-col p-5">
                     <div class="flex items-center gap-2">
                         <Badge tone="accent">{guide.category}</Badge>
-                        <span class="font-mono text-[11px] text-white/30">{guide.source}</span>
+                        <span class="font-mono text-[11px] text-white/50">{guide.source}</span>
                     </div>
 
                     <h3 class="mt-3 text-base leading-snug font-bold">
@@ -69,7 +69,7 @@ import { guideCategories, guides } from "../data/guides"
                         >{guide.title}</a>
                     </h3>
 
-                    <p class="mt-2 grow text-sm leading-relaxed text-white/55">{guide.summary}</p>
+                    <p class="mt-2 grow text-sm leading-relaxed text-white/65">{guide.summary}</p>
 
                     <a
                         href={guide.link}
@@ -85,7 +85,7 @@ import { guideCategories, guides } from "../data/guides"
         ))}
     </div>
 
-    <p id="guide-empty" class="hidden py-10 text-center text-sm text-white/40">
+    <p id="guide-empty" class="hidden py-10 text-center text-sm text-white/60">
         Nothing filed under that topic yet.
     </p>
 </Section>

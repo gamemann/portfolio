@@ -1,3 +1,5 @@
+import { games } from "./games"
+
 export const site = {
     name: "Christian Deacon",
     role: "DevOps Engineer",
@@ -39,6 +41,7 @@ export const navItems = [
     { title: "Skillset", sec: "skillset" },
     { title: "Stack", sec: "stack" },
     { title: "Projects", sec: "projects" },
+    ...(games.length > 0 ? [{ title: "Games", sec: "games" }] : []),
     { title: "Guides", sec: "guides" },
     { title: "Contact", sec: "contact" }
 ] as const

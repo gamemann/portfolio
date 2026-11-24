@@ -27,6 +27,43 @@ const UMAMI_REPLAY = ["true", "1", "yes"].includes(
     String(import.meta.env.PUBLIC_UMAMI_REPLAY ?? "").trim().toLowerCase()
 )
 
+// Starfield. A seeded generator keeps the sky identical between builds (and
+// between server and client), and emits each layer as one box-shadow list.
+function starLayer(count: number, seed: number, glow: number, palette: string[]) {
+    let state = seed
+
+    const rand = () => (state = (state * 1664525 + 1013904223) >>> 0) / 4294967296
+
+    return Array.from({ length: count }, () => {
+        const x = (rand() * 100).toFixed(2)
+        const y = (rand() * 135).toFixed(2)
+        const color = palette[Math.floor(rand() * palette.length)]
+
+        return `${x}vw ${y}vh ${glow}px 0 ${color}`
+    }).join(",")
+}
+
+const stars = [
+    {
+        size: 1,
+        parallax: "-10vh",
+        twinkle: "7s",
+        shadow: starLayer(170, 7, 0, ["rgba(255,255,255,.55)", "rgba(255,255,255,.32)", "rgba(179,174,255,.5)"])
+    },
+    {
+        size: 2,
+        parallax: "-20vh",
+        twinkle: "5s",
+        shadow: starLayer(48, 23, 1, ["rgba(255,255,255,.75)", "rgba(125,211,252,.7)", "rgba(249,168,212,.6)"])
+    },
+    {
+        size: 2,
+        parallax: "-32vh",
+        twinkle: "3.6s",
+        shadow: starLayer(14, 91, 5, ["rgba(255,255,255,.95)", "rgba(125,211,252,.9)", "rgba(253,230,138,.85)"])
+    }
+]
+
 const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url)
 ---
 
@@ -94,27 +131,44 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url)
         <div class="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden="true">
             <div class="absolute inset-0 bg-ink-950"></div>
 
-            <!-- Aurora blobs. Gradient-painted, not blurred; see the `aurora`
+            <!-- Nebula. Gradient-painted, not blurred; see the `aurora`
                  utility for why. Only transform animates, so these drift on the
                  compositor without repainting. -->
             <div
-                class="aurora absolute -top-48 left-1/2 h-[52rem] w-[52rem] -translate-x-1/2 animate-drift"
-                style="--aurora-tint:rgba(78,73,171,0.34)"
+                class="aurora absolute -top-56 left-1/2 h-[58rem] w-[58rem] -translate-x-1/2 animate-drift"
+                style="--aurora-tint:rgba(78,73,171,0.38)"
             ></div>
             <div
-                class="aurora absolute top-1/3 -left-48 h-[40rem] w-[40rem] animate-drift [animation-delay:-8s]"
-                style="--aurora-tint:rgba(6,182,212,0.16)"
+                class="aurora absolute top-1/4 -left-56 h-[44rem] w-[44rem] animate-drift [animation-delay:-8s]"
+                style="--aurora-tint:rgba(6,182,212,0.15)"
             ></div>
             <div
-                class="aurora absolute -right-40 bottom-0 h-[46rem] w-[46rem] animate-drift [animation-delay:-16s]"
+                class="aurora absolute -right-48 bottom-[-10rem] h-[50rem] w-[50rem] animate-drift [animation-delay:-16s]"
                 style="--aurora-tint:rgba(108,99,255,0.2)"
             ></div>
-
-            <!-- Grid -->
             <div
-                class="absolute inset-0 opacity-[0.28] [mask-image:radial-gradient(ellipse_at_50%_0%,#000_10%,transparent_75%)]"
+                class="aurora absolute top-[38%] right-[-14rem] h-[34rem] w-[34rem] animate-drift [animation-delay:-4s]"
+                style="--aurora-tint:rgba(217,70,239,0.11)"
+            ></div>
+
+            <!-- Stars: three depths, each a single element. -->
+            {stars.map((layer) => (
+                <div class="stars-parallax absolute inset-0" style={`--parallax:${layer.parallax}`}>
+                    <div
+                        class="stars animate-twinkle"
+                        style={`width:${layer.size}px;height:${layer.size}px;box-shadow:${layer.shadow};animation-duration:${layer.twinkle}`}
+                    ></div>
+                </div>
+            ))}
+
+            <!-- Grid: a faint navigation chart over the top of the sky. -->
+            <div
+                class="absolute inset-0 opacity-[0.16] [mask-image:radial-gradient(ellipse_at_50%_0%,#000_10%,transparent_70%)]"
                 style="background-image:linear-gradient(to right,rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(to bottom,rgba(255,255,255,.08) 1px,transparent 1px);background-size:64px 64px"
             ></div>
+
+            <!-- Vignette, so the edges fall away into black. -->
+            <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,rgba(5,4,14,0.7)_100%)]"></div>
 
             <!-- Grain -->
             <div
@@ -156,6 +210,43 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url)
                 )
 
                 nodes.forEach((n) => io.observe(n))
+            })()
+
+            // Card spotlight. One passive listener for the whole page writes the
+            // pointer position onto whichever .spot card is under it.
+            ;(() => {
+                if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches)
+                    return
+
+                let queued = false
+                let last = null
+
+                document.addEventListener(
+                    "pointermove",
+                    (e) => {
+                        last = e
+
+                        if (queued)
+                            return
+
+                        queued = true
+
+                        requestAnimationFrame(() => {
+                            queued = false
+
+                            const card = last.target instanceof Element ? last.target.closest(".spot") : null
+
+                            if (!card)
+                                return
+
+                            const rect = card.getBoundingClientRect()
+
+                            card.style.setProperty("--mx", `${last.clientX - rect.left}px`)
+                            card.style.setProperty("--my", `${last.clientY - rect.top}px`)
+                        })
+                    },
+                    { passive: true }
+                )
             })()
 
             // Park the decorative animations in whichever sections are off

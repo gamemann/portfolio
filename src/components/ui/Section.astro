@@ -1,6 +1,7 @@
 ---
 interface Props {
     id: string
+    /** "NN — Label". The number is lifted out into the chip and ghost numeral. */
     eyebrow: string
     title: string
     lead?: string
@@ -8,30 +9,49 @@ interface Props {
 }
 
 const { id, eyebrow, title, lead, class: className = "" } = Astro.props
+
+const [first, ...restParts] = eyebrow.split(" — ")
+const hasNumber = restParts.length > 0 && /^\d+$/.test(first)
+const number = hasNumber ? first : ""
+const label = hasNumber ? restParts.join(" — ") : eyebrow
 ---
 
-<section id={id} class={`relative scroll-mt-28 px-6 py-20 sm:px-8 sm:py-28 ${className}`}>
+<section id={id} class={`relative scroll-mt-28 px-5 pt-10 pb-20 sm:px-8 sm:pt-12 sm:pb-28 ${className}`}>
     <div class="mx-auto w-full max-w-6xl">
-        <header class="mb-12 sm:mb-16">
+        <div class="section-divider mb-16 sm:mb-24" aria-hidden="true">
+            <svg viewBox="0 0 24 24" class="h-3.5 w-3.5 drop-shadow-[0_0_6px_rgba(125,211,252,0.9)]" fill="currentColor">
+                <path d="M12 0c.9 7.2 4.8 11.1 12 12-7.2.9-11.1 4.8-12 12-.9-7.2-4.8-11.1-12-12 7.2-.9 11.1-4.8 12-12Z" />
+            </svg>
+        </div>
+
+        <header class="relative mb-12 sm:mb-16">
+            {number && (
+                <span
+                    aria-hidden="true"
+                    data-reveal="fade"
+                    class="ghost-numeral pointer-events-none absolute -top-6 right-0 hidden text-[9rem] md:block lg:text-[12rem]"
+                >{number}</span>
+            )}
+
             <p
                 data-reveal="up"
-                class="mb-3 font-mono text-xs tracking-[0.28em] text-accent-300 uppercase"
-            >{eyebrow}</p>
+                class="relative mb-4 flex items-center gap-3 font-mono text-xs tracking-[0.24em] text-accent-300 uppercase"
+            >
+                {number && (
+                    <span class="rounded-md border border-accent-400/30 bg-accent-500/10 px-2 py-1 leading-none tracking-[0.12em] text-accent-300">{number}</span>
+                )}
+                <span>{label}</span>
+            </p>
             <h2
                 data-reveal="up"
                 style="--reveal-delay:60ms"
-                class="text-3xl font-extrabold tracking-tight sm:text-4xl md:text-5xl"
+                class="relative max-w-3xl text-[2rem] leading-[1.08] font-extrabold tracking-tight sm:text-5xl lg:text-[3.5rem]"
             >{title}</h2>
-            <div
-                data-reveal="left"
-                style="--reveal-delay:120ms"
-                class="mt-5 h-px w-full max-w-sm rule-fade"
-            ></div>
             {lead && (
                 <p
                     data-reveal="up"
                     style="--reveal-delay:150ms"
-                    class="mt-5 max-w-2xl text-base leading-relaxed text-white/60"
+                    class="relative mt-6 max-w-2xl text-base leading-relaxed text-white/65 sm:text-lg"
                 >{lead}</p>
             )}
         </header>

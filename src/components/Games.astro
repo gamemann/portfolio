@@ -1,0 +1,128 @@
+---
+import Section from "./ui/Section.astro"
+import GameCard from "./game/Card.astro"
+import CardLinks from "./ui/CardLinks.astro"
+import { games, gamesMeta } from "../data/games"
+
+const featured = games.filter((g) => g.featured)
+const rest = games.filter((g) => !g.featured)
+
+const { project, platform } = gamesMeta
+
+const inlineLink =
+    "font-semibold text-white underline decoration-accent-400/60 underline-offset-4 transition hover:text-accent-300 hover:decoration-accent-300"
+
+const subhead = "flex items-center gap-3 font-mono text-xs tracking-[0.22em] text-white/55 uppercase"
+---
+
+{games.length > 0 && (
+    <Section
+        id="games"
+        eyebrow="05 — Playable"
+        title="Games you can play right now"
+        lead="Multiplayer games I'm making in my spare time. Every one of them is open source."
+    >
+        <!-- Where the games come from -->
+        <div
+            data-reveal="up"
+            class="surface spot relative overflow-hidden rounded-3xl p-6 sm:p-8 lg:p-10"
+        >
+            <div class="aurora absolute -top-40 -right-24 h-96 w-96" style="--aurora-tint:rgba(217,70,239,0.16)"></div>
+            <div class="aurora absolute -bottom-48 -left-24 h-96 w-96" style="--aurora-tint:rgba(34,211,238,0.12)"></div>
+
+            <div class="relative grid items-center gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12">
+                <div>
+                    <p class="text-lg leading-relaxed text-white/75 sm:text-xl">
+                        All of these games are <strong class="font-semibold text-mint-400">open source</strong> and
+                        part of the{" "}
+                        <a href={project.link} target="_blank" rel="noopener noreferrer" class={inlineLink}>{project.name}</a>{" "}
+                        project, which is built on{" "}
+                        <a href={platform.link} target="_blank" rel="noopener noreferrer" class={inlineLink}>{platform.name}</a>.
+                    </p>
+
+                    <dl class="mt-7 grid max-w-md grid-cols-3 gap-3">
+                        {[
+                            { value: String(games.length), label: "Games" },
+                            { value: String(featured.length), label: "Own domains" },
+                            { value: "100%", label: "Open source" }
+                        ].map((stat) => (
+                            <div class="flex flex-col-reverse justify-end rounded-xl border border-white/8 bg-white/3 px-3 py-3 text-center">
+                                <dt class="mt-0.5 text-[11px] text-white/55">{stat.label}</dt>
+                                <dd class="text-gradient font-display text-2xl font-extrabold">{stat.value}</dd>
+                            </div>
+                        ))}
+                    </dl>
+                </div>
+
+                <ul class="grid gap-3">
+                    {[
+                        { ...project, role: "The project" },
+                        { ...platform, role: "The platform" }
+                    ].map((item) => (
+                        <li class="flex flex-wrap items-center gap-x-4 gap-y-3 rounded-2xl border border-white/10 bg-ink-950/50 p-4">
+                            <img src={item.icon} alt="" width="44" height="44" loading="lazy" class="h-11 w-11 shrink-0 rounded-xl ring-1 ring-white/15" />
+                            <div class="min-w-0 grow">
+                                <p class="font-mono text-[11px] tracking-widest text-accent-300 uppercase">{item.role}</p>
+                                <p class="font-display text-lg font-bold text-white">{item.name}</p>
+                            </div>
+                            <CardLinks title={item.name} link={item.link} sourceLink={item.sourceLink} size="sm" />
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </div>
+
+        {featured.length > 0 && (
+            <>
+                <h3 data-reveal="up" class={`mt-14 mb-5 ${subhead}`}>
+                    <span class="h-1.5 w-1.5 rounded-full bg-accent-400 shadow-[0_0_10px_2px_rgba(34,211,238,0.7)]"></span>
+                    Flagship games
+                    <span class="h-px grow bg-linear-to-r from-white/15 to-transparent"></span>
+                </h3>
+
+                <div class="grid gap-5 md:grid-cols-2">
+                    {featured.map((game, i) => (
+                        <GameCard game={game} delay={(i % 2) * 120} />
+                    ))}
+                </div>
+            </>
+        )}
+
+        {rest.length > 0 && (
+            <>
+                <h3 data-reveal="up" class={`mt-14 mb-5 ${subhead}`}>
+                    <span class="h-1.5 w-1.5 rounded-full bg-nova-400 shadow-[0_0_10px_2px_rgba(244,114,182,0.7)]"></span>
+                    More on zeesgames.com
+                    <span class="h-px grow bg-linear-to-r from-white/15 to-transparent"></span>
+                </h3>
+
+                <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {rest.map((game, i) => (
+                        <GameCard game={game} delay={(i % 3) * 80} />
+                    ))}
+
+                    <!-- Closing tile: fills out the last row and points at the full catalogue. -->
+                    <a
+                        href={project.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        data-reveal="up"
+                        class="group relative flex min-h-48 flex-col justify-between overflow-hidden rounded-2xl border border-dashed border-white/15 bg-ink-900/40 p-6 transition duration-300 hover:-translate-y-1 hover:border-accent-400/60 hover:bg-ink-800/60 sm:col-span-2 sm:p-8"
+                    >
+                        <div class="aurora absolute -right-20 -bottom-32 h-80 w-80 transition duration-500 group-hover:scale-125" style="--aurora-tint:rgba(108,99,255,0.3)"></div>
+                        <img src={project.icon} alt="" width="48" height="48" loading="lazy" class="relative h-12 w-12 rounded-xl ring-1 ring-white/15" />
+                        <div class="relative mt-6">
+                            <p class="font-display text-2xl font-bold text-white sm:text-3xl">
+                                Play them all on <span class="text-gradient">zeesgames.com</span>
+                                <span class="ml-1 inline-block transition-transform duration-200 group-hover:translate-x-1 group-hover:-translate-y-1" aria-hidden="true">↗</span>
+                            </p>
+                            <p class="mt-2 max-w-md text-sm leading-relaxed text-white/65">
+                                The whole collection lives there, and every repository is public.
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            </>
+        )}
+    </Section>
+)}

@@ -9,11 +9,11 @@ interface Props {
 const { href, newTab = false, variant = "primary", class: className = "" } = Astro.props
 
 const base =
-    "group inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition duration-200 will-change-transform"
+    "group inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition duration-200"
 
 const variants: Record<string, string> = {
     primary:
-        "bg-linear-to-r from-brand-600 to-brand-500 text-white shadow-lg shadow-brand-600/25 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand-500/35",
+        "btn-sheen text-white shadow-lg shadow-brand-600/30 ring-1 ring-white/15 ring-inset hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand-500/45",
     ghost:
         "border border-white/12 bg-white/4 text-white/85 backdrop-blur hover:-translate-y-0.5 hover:border-white/25 hover:bg-white/8 hover:text-white"
 }

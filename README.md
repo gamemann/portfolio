@@ -33,6 +33,7 @@ Content lives in `src/data/` so copy changes don't require touching markup.
 | `src/data/skills.ts` | The "What I do" discipline cards |
 | `src/data/stack.ts` | Technologies, their group, and proficiency (1–10) |
 | `src/data/projects.ts` | Projects, including which are featured and which are still maintained |
+| `src/data/games.ts` | Games (Zee's Games on GameSpice): links, source repos, banners, icons |
 | `src/data/guides.ts` | Guides and their filter categories |
 
 Everything else:

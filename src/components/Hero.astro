@@ -26,6 +26,25 @@ const nameChars = site.name
     .split(" ")
     .map((word) => [...word].map((char) => ({ char, i: charIndex++ })))
 
+// The headline fades white -> lavender -> cyan across its length. Each letter
+// is its own animated span, which rules out background-clip on the parent, so
+// the gradient is sampled per character here instead.
+const stops: [number, number, number][] = [
+    [255, 255, 255],
+    [255, 255, 255],
+    [179, 174, 255],
+    [125, 211, 252]
+]
+
+function nameColor(i: number) {
+    const t = (i / Math.max(1, charIndex - 1)) * (stops.length - 1)
+    const a = stops[Math.min(Math.floor(t), stops.length - 2)]
+    const b = stops[Math.min(Math.floor(t), stops.length - 2) + 1]
+    const f = t - Math.min(Math.floor(t), stops.length - 2)
+
+    return `rgb(${a.map((v, k) => Math.round(v + (b[k] - v) * f)).join(" ")})`
+}
+
 const roles = [
     "DevOps Engineer",
     "Systems Programmer",
@@ -69,13 +88,15 @@ const fyiSegments = [
 }))
 ---
 
-<section id="hero" class="relative flex min-h-screen scroll-mt-28 items-center px-6 pt-32 pb-24 sm:px-8">
+<section id="hero" class="relative flex min-h-svh scroll-mt-28 items-center overflow-hidden px-5 pt-28 pb-20 sm:px-8 sm:pt-32 sm:pb-24">
+    <span class="shooting-star" aria-hidden="true"></span>
+
     <div class="mx-auto grid w-full max-w-6xl items-center gap-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
         <!-- Intro -->
         <div class="text-center lg:text-left">
             <p
                 data-reveal="down"
-                class="mb-6 inline-flex items-center gap-2.5 rounded-full border border-brand-400/25 bg-brand-500/10 px-3.5 py-1.5 font-mono text-[11px] tracking-wider text-brand-300 uppercase"
+                class="mb-7 inline-flex items-center gap-2.5 rounded-full border border-brand-400/30 bg-brand-500/10 px-3.5 py-1.5 font-mono text-[11px] tracking-wider text-brand-300 uppercase shadow-[0_0_24px_-6px] shadow-brand-500/60"
             >
                 <span class="relative flex h-1.5 w-1.5">
                     <span class="absolute inline-flex h-full w-full rounded-full bg-brand-400 animate-pulse-ring"></span>
@@ -85,7 +106,7 @@ const fyiSegments = [
             </p>
 
             <h1
-                class="font-display text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl"
+                class="font-display text-[2.9rem] leading-[1.02] font-extrabold tracking-[-0.03em] text-white drop-shadow-[0_0_28px_rgba(139,133,255,0.35)] xs:text-6xl sm:text-7xl lg:text-[5.25rem]"
                 aria-label={site.name}
             >
                 {nameChars.map((word, w) => (
@@ -93,21 +114,21 @@ const fyiSegments = [
                         {w > 0 && " "}
                         <span aria-hidden="true" class="inline-block whitespace-nowrap">
                             {word.map(({ char, i }) => (
-                                <span class="type-char" style={`--i:${i}`}>{char}</span>
+                                <span class="type-char" style={`--i:${i};color:${nameColor(i)}`}>{char}</span>
                             ))}
                         </span>
                     </>
                 ))}
             </h1>
 
-            <p data-reveal="up" style="--reveal-delay:900ms" class="mt-4 min-h-[1.75rem] font-mono text-lg text-accent-300 sm:min-h-[1.9rem] sm:text-xl">
+            <p data-reveal="up" style="--reveal-delay:900ms" class="mt-5 min-h-[1.75rem] font-mono text-lg text-accent-300 sm:min-h-[2rem] sm:text-2xl">
                 <RoleRotator client:load roles={roles} />
             </p>
 
             <p
                 data-reveal="up"
                 style="--reveal-delay:520ms"
-                class="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/60 lg:mx-0 sm:text-lg"
+                class="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/68 lg:mx-0 sm:text-lg"
             >
                 {site.tagline}
             </p>
@@ -135,7 +156,7 @@ const fyiSegments = [
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={l.name}
-                        class="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/4 transition duration-200 hover:-translate-y-1 hover:border-brand-400/40 hover:bg-brand-500/15"
+                        class="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/4 transition duration-200 hover:-translate-y-1 hover:border-brand-400/50 hover:bg-brand-500/20 hover:shadow-lg hover:shadow-brand-500/30"
                     >
                         <img src={icons[l.icon]} alt="" width="20" height="20" class="h-5 w-5 opacity-70" />
                     </a>
@@ -145,14 +166,20 @@ const fyiSegments = [
 
         <!-- Terminal card -->
         <div data-reveal="zoom" style="--reveal-delay:300ms" class="relative">
-            <div class="aurora-box absolute -inset-10 -z-10" style="--aurora-tint:rgba(108,99,255,0.18)"></div>
+            <div class="aurora-box absolute -inset-12 -z-10" style="--aurora-tint:rgba(108,99,255,0.24)"></div>
 
-            <div class="surface overflow-hidden rounded-2xl shadow-2xl shadow-black/60">
+            <!-- A planet and its ring, rising behind the terminal. -->
+            <div class="pointer-events-none absolute -top-20 -right-2 -z-10 h-28 w-28 sm:-top-24 sm:-right-12 sm:h-36 sm:w-36 lg:-right-16" aria-hidden="true">
+                <div class="planet animate-float absolute inset-0 text-[1rem]"></div>
+                <div class="absolute top-1/2 left-1/2 h-[38%] w-[190%] -translate-x-1/2 -translate-y-1/2 -rotate-[18deg] rounded-[50%] border border-accent-300/30 border-b-accent-300/70 shadow-[0_0_18px_rgba(125,211,252,0.18)]"></div>
+            </div>
+
+            <div class="surface overflow-hidden rounded-2xl shadow-2xl ring-1 shadow-brand-600/25 ring-brand-400/15">
                 <div class="flex items-center gap-2 border-b border-white/8 bg-white/4 px-4 py-3">
                     <span class="h-3 w-3 rounded-full bg-red-400/70"></span>
                     <span class="h-3 w-3 rounded-full bg-yellow-400/70"></span>
                     <span class="h-3 w-3 rounded-full bg-green-400/70"></span>
-                    <p class="ml-2 font-mono text-xs text-white/35">~/portfolio</p>
+                    <p class="ml-2 font-mono text-xs text-white/50">~/portfolio</p>
                 </div>
 
                 <div class="space-y-3.5 p-5 font-mono text-[13px] leading-relaxed sm:p-6">
@@ -211,10 +238,10 @@ const fyiSegments = [
                     <div
                         data-reveal="up"
                         style={`--reveal-delay:${700 + i * 90}ms`}
-                        class="rounded-xl border border-white/8 bg-white/3 px-3 py-3 text-center backdrop-blur"
+                        class="rounded-xl border border-white/8 bg-ink-900/60 px-3 py-3.5 text-center backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:border-brand-400/40"
                     >
-                        <p class="font-display text-lg font-extrabold text-white">{s.value}</p>
-                        <p class="mt-0.5 text-[11px] text-white/45">{s.label}</p>
+                        <p class="text-gradient font-display text-2xl font-extrabold">{s.value}</p>
+                        <p class="mt-0.5 text-[11px] text-white/60">{s.label}</p>
                     </div>
                 ))}
             </div>
@@ -224,7 +251,7 @@ const fyiSegments = [
     <a
         href="#about"
         aria-label="Scroll to About"
-        class="absolute bottom-8 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-white/30 transition hover:text-white/70 lg:flex"
+        class="absolute bottom-8 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-white/45 transition hover:text-white/80 lg:flex"
     >
         <span class="font-mono text-[10px] tracking-[0.25em] uppercase">Scroll</span>
         <span class="animate-float text-lg">↓</span>

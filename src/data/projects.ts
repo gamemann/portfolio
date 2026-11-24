@@ -1,6 +1,8 @@
 export type Project = {
     title: string
     banner: string
+    /** Small square logo shown beside the title. */
+    icon?: string
     link: string
     sourceLink?: string
     openSource: boolean
@@ -43,6 +45,36 @@ export const projects: Project[] = [
             "A welcoming and inclusive modding and game development community, operating as a project under TekWorks. Game development assets, the mod workshop, and the server browser are all live and functional alongside the blog and forums — with more shipping continuously."
     },
     {
+        title: "GameSpice",
+        banner: "/images/games/gamespice-banner.png",
+        icon: "/images/games/gamespice-icon.svg",
+        link: "https://gamespice.net",
+        sourceLink: "https://github.com/gamespice-platform",
+        openSource: true,
+        maintained: true,
+        category: "Gaming platform",
+        featured: true,
+        role: "Creator",
+        tags: ["Godot", "Open source", "Community servers"],
+        summary:
+            "An open source, cross-platform gaming platform for Godot games that puts community and game servers first. Play in your browser, join community servers, or publish your own game."
+    },
+    {
+        title: "Zee's Games",
+        banner: "/images/games/zees-games-banner.jpg",
+        icon: "/images/games/zees-games-icon.svg",
+        link: "https://zeesgames.com",
+        sourceLink: "https://github.com/zees-games",
+        openSource: true,
+        maintained: true,
+        category: "Games",
+        featured: true,
+        role: "Author",
+        tags: ["Godot", "GDScript", "Multiplayer"],
+        summary:
+            "A collection of open source multiplayer games I'm making with Godot, all running on GameSpice: surf and bunny hop, shooters, a physics sandbox, minigames, and more."
+    },
+    {
         title: "XDP Firewall",
         banner: "/images/project/xdp-firewall.png",
         link: "https://github.com/gamemann/XDP-Firewall",
@@ -69,17 +101,29 @@ export const projects: Project[] = [
             "A collection of high-performance tools for generating and sending network packets, used for two things: penetration testing — simulating attacks such as Denial of Service to assess network resilience — and network monitoring through traffic analysis and inspection."
     },
     {
-        title: "Zee's Games",
-        banner: "/images/project/zees-games.jpg",
-        link: "https://zeesgames.com",
-        sourceLink: "https://github.com/zees-games",
+        title: "Nightly",
+        banner: "/images/games/nightly-banner.png",
+        link: "https://github.com/gamemann/nightly",
+        sourceLink: "https://github.com/gamemann/nightly",
         openSource: true,
         maintained: true,
-        category: "Gaming",
+        category: "Automation",
         role: "Author",
-        tags: ["GDScript", "Godot", "Dot", "Game Development"],
+        tags: ["Claude Code", "Next.js", "TypeScript"],
         summary:
-            "A collection of open source games I'm working on for @modcommunity's gaming platform built on-top of Godot Engine."
+            "A database and web panel that autonomous Claude Code runs work from: a queue of tasks, schedules, run reports, and a live board where concurrent agents claim paths. It started as one cron line for GameSpice and grew from there."
+    },
+    {
+        title: "Standout Servers",
+        banner: "/images/games/standout-servers-banner.png",
+        icon: "/images/games/standout-servers-icon.png",
+        link: "https://standoutservers.com",
+        openSource: false,
+        maintained: true,
+        category: "Gaming",
+        tags: ["Server rankings", "Live data"],
+        summary:
+            "Live rankings of online game servers across the games tracked by The Modding Community, scored on population, uptime, and a transparent ranking formula."
     },
     {
         title: "Best Mods",
